@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KJC AI - SUPER ROBOT</title>
+    <title>Công nghệ AI Robot</title>
     <style>
         :root {
             --img-robot: url('https://i.postimg.cc/1zfRLs85/lv-0-20260225210308.png');
@@ -12,55 +12,56 @@
         * { box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
         body { margin: 0; background: #000; color: #fff; overflow: hidden; height: 100vh; }
 
-        /* GIAO DIỆN ĐĂNG NHẬP (DỮ NGUYÊN) */
+        /* LOGIN */
         #login-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .login-box { width: 90%; max-width: 300px; text-align: center; border: 2px solid var(--accent); padding: 30px 20px; border-radius: 20px; box-shadow: 0 0 20px var(--accent); }
         .login-box input { width: 100%; padding: 12px; margin: 10px 0; background: #111; border: 1px solid var(--accent); color: #fff; border-radius: 8px; text-align: center; }
         .login-box button { width: 100%; padding: 12px; background: var(--accent); border: none; color: #fff; font-weight: bold; border-radius: 8px; }
 
-        /* GIAO DIỆN CHÍNH */
+        /* MAIN APP */
         #main-app { display: none; height: 100vh; flex-direction: column; background: #050505; border: 1px solid var(--accent); }
         .top-bar { height: 45px; background: #000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 2px solid var(--accent); font-size: 10px; }
         .lobby { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; overflow-y: auto; }
         .card { border-radius: 12px; height: 100px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 10px; font-weight: bold; border: 1px solid #333; background-size: cover; background-position: center; opacity: 0.8; font-size: 12px; }
 
-        /* BẢN PHÂN TÍCH VIP */
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 500; align-items: center; justify-content: center; }
+        /* BẢN PHÂN TÍCH (TOOL CHÍNH) */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 500; align-items: center; justify-content: center; }
+        #pop-tool { z-index: 600; } /* Đảm bảo tool nằm trên cùng */
         .popup { width: 95%; max-width: 340px; background: #0a0a0a; border: 2px solid var(--accent); border-radius: 20px; padding: 15px; text-align: center; position: relative; box-shadow: 0 0 30px var(--accent); }
         
         .score-row { display: flex; justify-content: space-around; margin-bottom: 10px; }
-        .score-box { width: 65px; height: 65px; background: #111; border: 2px solid #444; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent); cursor: pointer; position: relative; }
+        .score-box { width: 65px; height: 65px; background: #111; border: 2px solid #444; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent); cursor: pointer; }
 
-        /* CHUYỂN ĐỘNG ROBOT THEO VIDEO (Nhún nhảy + Vẫy tay) */
+        /* MOTION ROBOT TỪ VIDEO */
         .monitor-area { display: flex; align-items: center; justify-content: center; position: relative; height: 130px; }
         .robot-wrapper { position: relative; width: 90px; height: 90px; z-index: 10; }
         .robot-img { 
             width: 100%; height: 100%; 
             background: var(--img-robot) center/contain no-repeat; 
-            animation: robotMotion 2s infinite ease-in-out; /* Chuyển động nhún nhảy từ video */
+            animation: robotMotion 2s infinite ease-in-out; 
         }
-        
         @keyframes robotMotion {
             0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-            25% { transform: translateY(-8px) rotate(-3deg) scale(1.05); }
-            50% { transform: translateY(0) rotate(3deg) scale(1); }
-            75% { transform: translateY(-5px) rotate(0deg) scale(1.02); }
+            25% { transform: translateY(-10px) rotate(-5deg) scale(1.05); }
+            50% { transform: translateY(0) rotate(5deg) scale(1); }
+            75% { transform: translateY(-7px) rotate(0deg) scale(1.02); }
         }
 
         .plasma-bolt { position: absolute; left: 80px; top: 50%; width: 0; height: 10px; background: #fff; opacity: 0; z-index: 5; box-shadow: 0 0 20px #fff, 0 0 40px #00ffff, 0 0 60px var(--accent); }
         .scanning .plasma-bolt { width: 85px; opacity: 1; animation: boltExtreme 0.03s infinite; }
 
-        /* KẾT QUẢ HIỂN THỊ ĐA NĂNG */
         .res-container { position: relative; width: 90px; height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .res-display { font-size: 3.5rem; font-weight: 900; color: #111; z-index: 10; line-height: 1; }
-        .side-bet { font-size: 10px; color: #00ff00; font-weight: bold; margin-top: 5px; }
+        .res-display { font-size: 3.5rem; font-weight: 900; color: #111; z-index: 10; line-height: 1; transition: 0.3s; }
+        .side-bet { font-size: 10px; color: #00ff00; font-weight: bold; margin-top: 5px; height: 12px; }
         .active-res .glow-circle { opacity: 1; border: 5px solid var(--accent); border-top-color: #00ffff; border-radius: 50%; position: absolute; inset: 0; animation: rotateFast 0.2s linear infinite; }
 
         @keyframes rotateFast { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* BẢNG PHÍM & DANH SÁCH BÀN */
+        /* DANH SÁCH BÀN 1-C16 */
         .table-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 15px; max-height: 250px; overflow-y: auto; }
-        .t-item { background: #1a1a1a; border: 1px solid #333; padding: 12px 0; font-size: 10px; border-radius: 8px; text-align: center; }
+        .t-item { background: #1a1a1a; border: 1px solid #333; padding: 12px 0; font-size: 10px; border-radius: 8px; color: #fff; }
+        
+        /* BÀN PHÍM SỐ */
         .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
         .num-btn { padding: 15px 0; background: #1a1a1a; border: 1px solid #444; color: #fff; border-radius: 8px; font-weight: bold; }
     </style>
@@ -69,28 +70,28 @@
 
     <div id="login-screen">
         <div class="login-box">
-            <h2 style="color:var(--accent);">KJC ULTIMATE AI</h2>
+            <h2 style="color:var(--accent);">KJC ULTIMATE</h2>
             <input type="tel" id="phone" placeholder="SĐT đăng nhập">
-            <button onclick="handleLogin()">KÍCH HOẠT ROBOT</button>
+            <button onclick="handleLogin()">VÀO HỆ THỐNG</button>
         </div>
     </div>
 
     <div id="main-app">
         <div class="top-bar">
-            <span>ALGO: <b style="color:var(--accent)">SUPER_AI_V2</b></span>
-            <span>STATUS: <b id="stt-main" style="color:#00ff00">LIVE SCANNING</b></span>
+            <span>ALGO: <b style="color:var(--accent)">SUPER_AI_V3</b></span>
+            <span>STATUS: <b style="color:#00ff00">CONNECTED</b></span>
         </div>
         <div class="lobby">
-            <div class="card" onclick="openTableSelect('DREAM')" style="background-image:url('https://i.postimg.cc/FswJDnC7/1771937103914.jpg')">DREAM</div>
-            <div class="card" onclick="openTableSelect('SEXY')" style="background-image:url('https://i.postimg.cc/0jW7kkCX/1771937107854.jpg')">SEXY</div>
-            <div class="card" onclick="openTableSelect('WM')" style="background-image:url('https://i.postimg.cc/t7GpVPDp/1771937162161.jpg')">WM</div>
-            <div class="card" onclick="openTableSelect('SA')" style="background-image:url('https://i.postimg.cc/bvgrc6gT/1771937152310.jpg')">SA</div>
+            <div class="card" onclick="openTableSelect()" style="background-image:url('https://i.postimg.cc/FswJDnC7/1771937103914.jpg')">DREAM</div>
+            <div class="card" onclick="openTableSelect()" style="background-image:url('https://i.postimg.cc/0jW7kkCX/1771937107854.jpg')">SEXY</div>
+            <div class="card" onclick="openTableSelect()" style="background-image:url('https://i.postimg.cc/t7GpVPDp/1771937162161.jpg')">WM</div>
+            <div class="card" onclick="openTableSelect()" style="background-image:url('https://i.postimg.cc/bvgrc6gT/1771937152310.jpg')">SA</div>
         </div>
     </div>
 
     <div id="pop-tool" class="overlay">
         <div class="popup">
-            <span style="position:absolute; right:15px; top:10px; color:#fff; cursor:pointer;" onclick="closePopup('pop-tool')">×</span>
+            <span style="position:absolute; right:15px; top:10px; color:#fff; cursor:pointer; font-size:20px;" onclick="closeTool()">×</span>
             <div id="active-table" style="color:yellow; font-weight:bold; margin-bottom:5px; font-size:12px;">BÀN: --</div>
             
             <div class="score-row">
@@ -101,7 +102,7 @@
             <div class="monitor-area" id="monitor">
                 <div class="robot-wrapper">
                     <div class="plasma-bolt"></div>
-                    <div id="robot-target" class="robot-img"></div>
+                    <div class="robot-img"></div>
                 </div>
                 <div class="res-container" id="res-box">
                     <div class="glow-circle"></div>
@@ -116,7 +117,7 @@
 
     <div id="pop-select-table" class="overlay">
         <div class="popup">
-            <b style="color:var(--accent)">CHỌN BÀN 1-C16</b>
+            <b style="color:var(--accent)">DANH SÁCH BÀN 1-C16</b>
             <div class="table-grid" id="table-list"></div>
         </div>
     </div>
@@ -125,9 +126,10 @@
 
 <script>
     let curSide = ''; let pScore = null; let bScore = null;
-    let history = []; let ván = 1;
+    let ván = 1; let reminderTimer;
 
     function speak(text) {
+        window.speechSynthesis.cancel(); // Ngắt câu cũ để ưu tiên câu mới
         const msg = new SpeechSynthesisUtterance(text);
         msg.lang = 'vi-VN';
         window.speechSynthesis.speak(msg);
@@ -137,22 +139,10 @@
         if(document.getElementById('phone').value.length >= 10) {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
-            speak("Đang xâm nhập vào server. Đang xâm nhập vào server.");
         } else { alert("Nhập SĐT!"); }
     }
 
-    const np = document.getElementById('num-pad');
-    for(let i=0; i<=9; i++) {
-        let btn = document.createElement('button'); btn.innerText=i; btn.className='num-btn';
-        btn.onclick = () => {
-            if(curSide=='P') { pScore=i; document.getElementById('p-val').innerText=i; }
-            else { bScore=i; document.getElementById('b-val').innerText=i; }
-            closePopup('pop-num');
-            if(pScore!==null && bScore!==null) runSuperAI();
-        };
-        np.appendChild(btn);
-    }
-
+    // Tạo bàn 1-C16
     const tList = document.getElementById('table-list');
     for(let i=1; i<=10; i++) createTItem(`BÀN ${i}`);
     for(let i=1; i<=16; i++) createTItem(`BÀN C${i<10?'0'+i:i}`);
@@ -163,16 +153,57 @@
             closePopup('pop-select-table'); 
             document.getElementById('active-table').innerText="BÀN: "+n; 
             openPopup('pop-tool'); 
-            speak("Nhập điểm cho robot quét lá bài.");
+            startVoiceSequence(); // Kích hoạt chuỗi giọng nói
         };
         tList.appendChild(d);
     }
 
+    function startVoiceSequence() {
+        speak("Đang xâm nhập vào server, vui lòng chờ chút.");
+        
+        setTimeout(() => {
+            speak("Xâm nhập thành công, vui lòng nhập dữ liệu.");
+            setTimeout(() => {
+                speak("Vui lòng nhập điểm bàn trước để được phân tích.");
+                resetReminder(); // Bắt đầu đếm 20s nhắc lại
+            }, 3500);
+        }, 3000);
+    }
+
+    function resetReminder() {
+        clearTimeout(reminderTimer);
+        reminderTimer = setTimeout(() => {
+            speak("Vui lòng nhập điểm để phân tích.");
+            resetReminder(); // Nhắc lại tiếp sau 20s
+        }, 20000);
+    }
+
+    function handleInput() {
+        clearTimeout(reminderTimer); // Anh bấm số thì ngừng nhắc
+        if(pScore!==null && bScore!==null) runAI();
+        else resetReminder(); // Nếu chưa đủ điểm thì 20s sau nhắc tiếp
+    }
+
+    // Bàn phím số
+    const np = document.getElementById('num-pad');
+    for(let i=0; i<=9; i++) {
+        let btn = document.createElement('button'); btn.innerText=i; btn.className='num-btn';
+        btn.onclick = () => {
+            if(curSide=='P') { pScore=i; document.getElementById('p-val').innerText=i; }
+            else { bScore=i; document.getElementById('b-val').innerText=i; }
+            closePopup('pop-num');
+            handleInput();
+        };
+        np.appendChild(btn);
+    }
+
     function openPopup(id) { document.getElementById(id).style.display='flex'; }
     function closePopup(id) { document.getElementById(id).style.display='none'; }
+    function closeTool() { closePopup('pop-tool'); clearTimeout(reminderTimer); }
+    function openTableSelect() { openPopup('pop-select-table'); }
     function setSide(s) { curSide=s; openPopup('pop-num'); }
 
-    function runSuperAI() {
+    function runAI() {
         const mon = document.getElementById('monitor');
         const res = document.getElementById('res-text');
         const sideTxt = document.getElementById('side-bet-text');
@@ -183,41 +214,35 @@
         resBox.classList.remove('active-res');
         res.innerText = "..";
         sideTxt.innerText = "";
-        log.innerText = "> AI ĐANG PHÂN TÍCH CẦU ĐẢO, CẦU NGHỊCH...";
+        log.innerText = "> ĐANG SO KHỚP CẦU ĐẢO, CẦU NGHỊCH...";
 
         setTimeout(() => {
             mon.classList.remove('scanning');
             resBox.classList.add('active-res');
             
-            // THUẬT TOÁN TỔNG HỢP: NHÂN CHIA + CẦU NGHỊCH + CHẴN LẺ
-            let baseMath = Math.floor((bScore * 3.14 / 2) + pScore - ván);
-            let checkOddEven = (pScore + bScore) % 2 === 0 ? "B" : "P";
-            let trend = (history.length > 2 && history[history.length-1] === history[history.length-2]) ? "BREAK" : "FOLLOW";
+            // Thuật toán: Nhân chia trước, cộng trừ sau + Chẵn lẻ
+            let logic = Math.abs(Math.floor((bScore * 3.5 / 2) + pScore - ván)) % 2;
+            let final = (logic === 0) ? "B" : "P";
             
-            let final = (Math.abs(baseMath) % 2 === 0) ? "B" : "P";
-            
-            // PHÂN TÍCH KÈM THEO (Cái đôi, Con đôi, Long bảo)
+            // Soi kèo phụ
             let extra = "";
-            if(pScore === bScore && pScore > 6) extra = "LONG BẢO";
-            else if(pScore % 2 === 0 && pScore > 0 && Math.random() > 0.7) extra = "CON ĐÔI";
-            else if(bScore % 2 === 0 && bScore > 0 && Math.random() > 0.7) extra = "CÁI ĐÔI";
+            if(pScore === bScore) extra = "LONG BẢO";
+            else if(pScore > 0 && pScore % 2 === 0 && Math.random() > 0.8) extra = "CON ĐÔI";
+            else if(bScore > 0 && bScore % 2 === 0 && Math.random() > 0.8) extra = "CÁI ĐÔI";
 
             res.innerText = final;
             res.style.color = final === 'P' ? "#00ffff" : "#bc13fe";
             sideTxt.innerText = extra;
-            
-            // LOG THUẬT TOÁN CHI TIẾT
-            let algoType = (trend === "BREAK") ? "CẦU BẺ" : "CẦU NGHIÊN " + (final === "P" ? "CON" : "CÁI");
-            log.innerHTML = `> ${algoType}<br>> CHỐT: ${final} ${extra}`;
+            log.innerHTML = `> CHỐT: ${final} ${extra}<br>> HỆ THỐNG SERVER STABLE`;
 
-            history.push(final);
             pScore = null; bScore = null; ván++;
             document.getElementById('p-val').innerText = "0";
             document.getElementById('b-val').innerText = "0";
-            if(navigator.vibrate) navigator.vibrate([400, 100, 400]);
+            if(navigator.vibrate) navigator.vibrate([500]);
+            resetReminder(); // Phân tích xong, đợi 20s nhắc nhập ván mới
         }, 5000);
     }
 </script>
 </body>
-                </html>
-                
+    </html>
+                    
