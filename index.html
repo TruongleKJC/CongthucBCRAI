@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Công nghệ AI quét BCR 2026</title>
+    <title>Công nghệ AI quét BCR</title>
     <style>
         :root { --accent: #bc13fe; }
         * { box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
         body { margin: 0; background: #000; color: #fff; overflow: hidden; height: 100vh; }
 
-        /* VIDEO NỀN CHO TOÀN ỨNG DỤNG */
+        /* VIDEO NỀN */
         .bg-video-main {
             position: fixed; inset: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: -1; opacity: 0.6;
+            object-fit: cover; z-index: -1; opacity: 0.5;
         }
 
-        /* TẦNG 1: ĐĂNG NHẬP */
+        /* ĐĂNG NHẬP */
         #login-screen { 
             position: fixed; inset: 0; z-index: 9000; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.5); /* Làm mờ để nổi bật video nền */
+            background: rgba(0,0,0,0.6);
         }
         .login-box { 
             width: 90%; max-width: 300px; text-align: center; 
@@ -30,7 +30,7 @@
         .login-box input { width: 100%; padding: 12px; margin: 10px 0; background: #111; border: 1px solid var(--accent); color: #fff; border-radius: 8px; text-align: center; }
         .login-box button { width: 100%; padding: 12px; background: var(--accent); border: none; color: #fff; font-weight: bold; border-radius: 8px; cursor: pointer; }
 
-        /* TẦNG 2: SẢNH CHÍNH */
+        /* SẢNH CHÍNH */
         #main-app { display: none; height: 100vh; flex-direction: column; position: relative; z-index: 100; }
         .top-bar { height: 45px; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 2px solid var(--accent); font-size: 10px; }
         .lobby { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; overflow-y: auto; }
@@ -38,11 +38,10 @@
             border-radius: 12px; height: 110px; display: flex; align-items: flex-end; justify-content: center; 
             padding-bottom: 10px; font-weight: bold; border: 1px solid var(--accent); 
             background-size: cover; background-position: center; font-size: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-        .card:active { transform: scale(0.95); }
 
-        /* TẦNG 3: BẢNG PHÂN TÍCH (TOOL) */
+        /* BẢNG PHÂN TÍCH */
         #pop-tool { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
         .popup-tool { 
             width: 95%; max-width: 340px; background: rgba(10,10,10,0.95); 
@@ -50,7 +49,7 @@
             text-align: center; position: relative; box-shadow: 0 0 30px var(--accent); 
         }
 
-        /* KHU VỰC ROBOT VIDEO TRONG BÀN */
+        /* ROBOT VIDEO */
         .monitor-area { display: flex; align-items: center; justify-content: center; position: relative; height: 140px; }
         .robot-vid-box { width: 120px; height: 120px; z-index: 10; overflow: hidden; }
         .robot-vid-box video { width: 100%; height: 100%; object-fit: contain; }
@@ -58,15 +57,23 @@
         .plasma-bolt { position: absolute; left: 100px; top: 50%; width: 0; height: 10px; background: #fff; opacity: 0; z-index: 15; box-shadow: 0 0 20px #fff, 0 0 40px #00ffff, 0 0 60px var(--accent); }
         .scanning .plasma-bolt { width: 70px; opacity: 1; animation: boltExtreme 0.03s infinite; }
 
-        /* TẦNG 4: BẢNG NHẬP ĐIỂM (TOP LAYER) */
+        /* KẾT QUẢ & NÚT THOÁT */
+        .res-display { font-size: 3.5rem; font-weight: 900; color: #111; z-index: 10; line-height: 1; }
+        .active-res .glow-circle { opacity: 1; border: 5px solid var(--accent); border-top-color: #00ffff; border-radius: 50%; position: absolute; inset: 0; animation: rotateFast 0.2s linear infinite; }
+        
+        .btn-exit-table {
+            margin-top: 15px; width: 100%; padding: 10px;
+            background: linear-gradient(to right, #cc0000, #ff0000);
+            border: none; border-radius: 8px; color: #fff; font-weight: bold;
+            font-size: 12px; cursor: pointer; box-shadow: 0 0 10px rgba(255,0,0,0.5);
+        }
+
+        /* NHẬP ĐIỂM (TOP LAYER) */
         #pop-num { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; align-items: center; justify-content: center; }
         .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 15px; }
         .num-btn { padding: 18px 0; background: #1a1a1a; border: 1px solid var(--accent); color: #fff; border-radius: 10px; font-weight: bold; font-size: 18px; }
 
-        /* HIỆU ỨNG CHUNG */
         @keyframes boltExtreme { 0% { clip-path: polygon(0 40%, 20% 0, 50% 100%, 80% 0, 100% 40%); } 100% { clip-path: polygon(0 60%, 30% 100%, 60% 0, 90% 100%, 100% 60%); } }
-        .res-display { font-size: 3.5rem; font-weight: 900; color: #111; z-index: 10; line-height: 1; }
-        .active-res .glow-circle { opacity: 1; border: 5px solid var(--accent); border-top-color: #00ffff; border-radius: 50%; position: absolute; inset: 0; animation: rotateFast 0.2s linear infinite; }
         @keyframes rotateFast { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
@@ -78,17 +85,16 @@
 
     <div id="login-screen">
         <div class="login-box">
-            <h2 style="color:var(--accent); letter-spacing: 2px;">Công nghệ AI</h2>
-            <p style="font-size: 10px; color: #aaa;">Robot Soi lá Bài</p>
-            <input type="tel" id="phone" placeholder="Số điện thoại đăng nhập">
-            <button onclick="handleLogin()">XÂM NHẬP HỆ THỐNG</button>
+            <h2 style="color:var(--accent);">Công nghệ BCR AI</h2>
+            <input type="tel" id="phone" placeholder="SĐT Đăng nhập">
+            <button onclick="handleLogin()">VÀO HỆ THỐNG</button>
         </div>
     </div>
 
     <div id="main-app">
         <div class="top-bar">
-            <span>NETWORK: <b style="color:var(--accent)">VIDEO_BG_STABLE</b></span>
-            <span>ID: <b style="color:#00ff00">CONNECTED</b></span>
+            <span>Admin: <b style="color:var(--accent)">Tool phân tích AI V4</b></span>
+            <span>Kết nối: <b style="color:#00ff00">ONLINE</b></span>
         </div>
         <div class="lobby">
             <div class="card" onclick="openTableSelect()" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('https://i.postimg.cc/FswJDnC7/1771937103914.jpg')">DREAM</div>
@@ -100,7 +106,6 @@
 
     <div id="pop-tool">
         <div class="popup-tool">
-            <span style="position:absolute; right:15px; top:10px; color:#fff; cursor:pointer; font-size:20px;" onclick="closeTool()">×</span>
             <div id="active-table" style="color:yellow; font-weight:bold; margin-bottom:10px; font-size:12px;">BÀN: --</div>
             
             <div style="display:flex; justify-content:space-around; margin-bottom:10px;">
@@ -117,7 +122,7 @@
             <div class="monitor-area" id="monitor">
                 <div class="robot-vid-box">
                     <video id="robot-vid" autoplay loop muted playsinline>
-                        <source src="https://image2url.com/r2/default/videos/1772287066921-d74b88a7-da87-4461-b9d5-8887072dbf3c.mp4" type="video/mp4">
+                        <source src="https://image2url.com/r2/default/videos/1772288616151-f2d6d757-16c5-4c0f-bc60-49b0da6b679f.webm" type="video/mp4">
                     </video>
                 </div>
                 <div class="plasma-bolt"></div>
@@ -127,7 +132,9 @@
                 </div>
             </div>
             
-            <div id="log-text" style="font-size:9px; color:#00ff00; margin-top:5px; font-weight:bold;">HỆ THỐNG SẴN SÀNG...</div>
+            <div id="log-text" style="font-size:9px; color:#00ff00; margin-top:5px; font-weight:bold;">SẴN SÀNG QUÉT...</div>
+
+            <button class="btn-exit-table" onclick="exitAndClear()">THOÁT BÀN & XOÁ DỮ LIỆU</button>
         </div>
     </div>
 
@@ -158,6 +165,28 @@
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
         } else { alert("Nhập SĐT!"); }
+    }
+
+    // Nút Thoát và Xóa sạch dữ liệu
+    function exitAndClear() {
+        // 1. Reset các biến dữ liệu
+        pScore = null; bScore = null; ván = 1; curSide = '';
+        
+        // 2. Reset giao diện
+        document.getElementById('p-val').innerText = "0";
+        document.getElementById('b-val').innerText = "0";
+        document.getElementById('res-text').innerText = "?";
+        document.getElementById('res-text').style.color = "#111";
+        document.getElementById('res-box').classList.remove('active-res');
+        document.getElementById('log-text').innerText = "HỆ THỐNG ĐÃ XOÁ DỮ LIỆU.";
+        
+        // 3. Tắt bảng phân tích và dừng giọng nói
+        document.getElementById('pop-tool').style.display = 'none';
+        clearTimeout(reminderTimer);
+        window.speechSynthesis.cancel();
+        
+        // 4. Thông báo
+        console.log("Dữ liệu đã được xóa sạch.");
     }
 
     const tList = document.getElementById('table-list');
@@ -210,7 +239,6 @@
     }
 
     function openTableSelect() { document.getElementById('pop-select-table').style.display='flex'; }
-    function closeTool() { document.getElementById('pop-tool').style.display='none'; clearTimeout(reminderTimer); }
     function setSide(s) { curSide = s; document.getElementById('pop-num').style.display='flex'; }
 
     function runAI() {
@@ -223,7 +251,7 @@
         mon.classList.add('scanning');
         resBox.classList.remove('active-res');
         res.innerText = "..";
-        log.innerText = "> ĐANG PHÂN TÍCH SERVER...";
+        log.innerText = "> PHÂN TÍCH THUẬT TOÁN AI...";
 
         setTimeout(() => {
             mon.classList.remove('scanning');
@@ -242,4 +270,4 @@
 </script>
 </body>
     </html>
-    
+                    
