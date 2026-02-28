@@ -3,77 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Công nghệ AI quét BCR</title>
+    <title>Công nghệ BCR AI - ULTIMATE V4.5</title>
     <style>
-        :root { --accent: #bc13fe; }
+        :root { --accent: #bc13fe; --player: #0055ff; --banker: #ff0000; --glow: rgba(188, 19, 254, 0.6); }
         * { box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
         body { margin: 0; background: #000; color: #fff; overflow: hidden; height: 100vh; }
 
         /* VIDEO NỀN */
-        .bg-video-main {
-            position: fixed; inset: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: -1; opacity: 0.5;
-        }
+        .bg-video-main { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.4; }
 
         /* ĐĂNG NHẬP */
-        #login-screen { 
-            position: fixed; inset: 0; z-index: 9000; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.6);
-        }
-        .login-box { 
-            width: 90%; max-width: 300px; text-align: center; 
-            border: 2px solid var(--accent); padding: 30px 20px; 
-            border-radius: 20px; box-shadow: 0 0 20px var(--accent);
-            backdrop-filter: blur(10px); background: rgba(0,0,0,0.7);
-        }
-        .login-box input { width: 100%; padding: 12px; margin: 10px 0; background: #111; border: 1px solid var(--accent); color: #fff; border-radius: 8px; text-align: center; }
-        .login-box button { width: 100%; padding: 12px; background: var(--accent); border: none; color: #fff; font-weight: bold; border-radius: 8px; cursor: pointer; }
+        #login-screen { position: fixed; inset: 0; z-index: 9000; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.8); }
+        .login-box { width: 90%; max-width: 320px; text-align: center; border: 2px solid var(--accent); padding: 40px 20px; border-radius: 25px; box-shadow: 0 0 30px var(--glow); backdrop-filter: blur(15px); background: rgba(20,0,30,0.7); }
+        .login-box input { width: 100%; padding: 15px; margin: 15px 0; background: #000; border: 1px solid var(--accent); color: #fff; border-radius: 12px; text-align: center; font-size: 16px; outline: none; }
+        .login-box button { width: 100%; padding: 15px; background: linear-gradient(45deg, #bc13fe, #7a0bc0); border: none; color: #fff; font-weight: bold; border-radius: 12px; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 15px var(--glow); }
 
         /* SẢNH CHÍNH */
         #main-app { display: none; height: 100vh; flex-direction: column; position: relative; z-index: 100; }
-        .top-bar { height: 45px; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 2px solid var(--accent); font-size: 10px; }
-        .lobby { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; overflow-y: auto; }
-        .card { 
-            border-radius: 12px; height: 110px; display: flex; align-items: flex-end; justify-content: center; 
-            padding-bottom: 10px; font-weight: bold; border: 1px solid var(--accent); 
-            background-size: cover; background-position: center; font-size: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
+        .top-bar { height: 50px; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 2px solid var(--accent); font-size: 11px; letter-spacing: 1px; }
+        .lobby { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px; overflow-y: auto; }
+        .card { border-radius: 15px; height: 120px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px; font-weight: bold; border: 1px solid rgba(188, 19, 254, 0.4); background-size: cover; background-position: center; font-size: 13px; box-shadow: 0 8px 20px rgba(0,0,0,0.6); transition: 0.3s; }
+        .card:active { transform: translateY(-5px); border-color: var(--accent); }
 
-        /* BẢNG PHÂN TÍCH */
-        #pop-tool { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
-        .popup-tool { 
-            width: 95%; max-width: 340px; background: rgba(10,10,10,0.95); 
-            border: 2px solid var(--accent); border-radius: 20px; padding: 15px; 
-            text-align: center; position: relative; box-shadow: 0 0 30px var(--accent); 
-        }
-
-        /* ROBOT VIDEO */
-        .monitor-area { display: flex; align-items: center; justify-content: center; position: relative; height: 140px; }
-        .robot-vid-box { width: 120px; height: 120px; z-index: 10; overflow: hidden; }
-        .robot-vid-box video { width: 100%; height: 100%; object-fit: contain; }
-
-        .plasma-bolt { position: absolute; left: 100px; top: 50%; width: 0; height: 10px; background: #fff; opacity: 0; z-index: 15; box-shadow: 0 0 20px #fff, 0 0 40px #00ffff, 0 0 60px var(--accent); }
-        .scanning .plasma-bolt { width: 70px; opacity: 1; animation: boltExtreme 0.03s infinite; }
-
-        /* KẾT QUẢ & NÚT THOÁT */
-        .res-display { font-size: 3.5rem; font-weight: 900; color: #111; z-index: 10; line-height: 1; }
-        .active-res .glow-circle { opacity: 1; border: 5px solid var(--accent); border-top-color: #00ffff; border-radius: 50%; position: absolute; inset: 0; animation: rotateFast 0.2s linear infinite; }
+        /* BẢNG PHÂN TÍCH CAO CẤP */
+        #pop-tool { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; }
+        .popup-tool { width: 92%; max-width: 360px; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); border: 2px solid var(--accent); border-radius: 30px; padding: 20px; text-align: center; position: relative; box-shadow: 0 0 50px rgba(0,0,0,1), 0 0 20px var(--glow); }
         
-        .btn-exit-table {
-            margin-top: 15px; width: 100%; padding: 10px;
-            background: linear-gradient(to right, #cc0000, #ff0000);
-            border: none; border-radius: 8px; color: #fff; font-weight: bold;
-            font-size: 12px; cursor: pointer; box-shadow: 0 0 10px rgba(255,0,0,0.5);
-        }
+        /* HIỂN THỊ ĐIỂM */
+        .score-display { display: flex; justify-content: space-between; margin: 15px 0; }
+        .score-card { flex: 1; margin: 0 10px; padding: 10px; border-radius: 15px; background: rgba(0,0,0,0.5); border: 1px solid #444; }
+        .val-box { font-size: 2.5rem; font-weight: 900; height: 70px; display: flex; align-items: center; justify-content: center; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
 
-        /* NHẬP ĐIỂM (TOP LAYER) */
-        #pop-num { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; align-items: center; justify-content: center; }
-        .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 15px; }
-        .num-btn { padding: 18px 0; background: #1a1a1a; border: 1px solid var(--accent); color: #fff; border-radius: 10px; font-weight: bold; font-size: 18px; }
+        /* ROBOT & KẾT QUẢ */
+        .monitor-area { display: flex; align-items: center; justify-content: center; position: relative; height: 160px; margin: 10px 0; background: rgba(255,255,255,0.05); border-radius: 20px; }
+        .robot-vid-box { width: 130px; height: 130px; z-index: 10; filter: drop-shadow(0 0 10px var(--accent)); }
+        .robot-vid-box video { width: 100%; height: 100%; object-fit: contain; }
+        
+        .res-container { position: relative; width: 100px; height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .res-display { font-size: 4rem; font-weight: 900; color: #111; z-index: 10; transition: 0.5s; }
+        .active-res .glow-circle { opacity: 1; border: 6px solid var(--accent); border-top-color: #00ffff; border-radius: 50%; position: absolute; inset: 0; animation: rotateFast 0.4s linear infinite; }
+        
+        /* PHÂN TÍCH KÈO PHỤ */
+        .extra-info { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px; }
+        .badge { font-size: 10px; padding: 5px; border-radius: 5px; background: rgba(0,0,0,0.4); border: 1px solid #333; color: #aaa; }
+        .badge.active { color: #00ff00; border-color: #00ff00; background: rgba(0,255,0,0.1); }
 
-        @keyframes boltExtreme { 0% { clip-path: polygon(0 40%, 20% 0, 50% 100%, 80% 0, 100% 40%); } 100% { clip-path: polygon(0 60%, 30% 100%, 60% 0, 90% 100%, 100% 60%); } }
+        .btn-exit-table { margin-top: 20px; width: 100%; padding: 12px; background: linear-gradient(to right, #6a0000, #ff0000); border: none; border-radius: 15px; color: #fff; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(255,0,0,0.3); }
+
+        /* NHẬP ĐIỂM */
+        #pop-num { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000; align-items: center; justify-content: center; }
+        .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 20px; }
+        .num-btn { padding: 20px 0; background: #1a1a1a; border: 1px solid var(--accent); color: #fff; border-radius: 15px; font-weight: bold; font-size: 20px; box-shadow: 0 0 10px rgba(188,19,254,0.2); }
+
         @keyframes rotateFast { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
@@ -85,37 +66,38 @@
 
     <div id="login-screen">
         <div class="login-box">
-            <h2 style="color:var(--accent);">Công nghệ BCR AI</h2>
-            <input type="tel" id="phone" placeholder="SĐT Đăng nhập">
-            <button onclick="handleLogin()">VÀO HỆ THỐNG</button>
+            <h2 style="color:var(--accent); text-transform: uppercase;">BCR AI ULTIMATE</h2>
+            <p style="font-size: 10px; color: #888;">Hệ thống phân tích thời gian thực V4.5</p>
+            <input type="tel" id="phone" placeholder="Nhập mã kích hoạt (SĐT)">
+            <button onclick="handleLogin()">Kết nối Server</button>
         </div>
     </div>
 
     <div id="main-app">
         <div class="top-bar">
-            <span>Admin: <b style="color:var(--accent)">Tool phân tích AI V4</b></span>
-            <span>Kết nối: <b style="color:#00ff00">ONLINE</b></span>
+            <span>ALGORITHM: <b style="color:var(--accent)">DYNAMIC MODULO V4</b></span>
+            <span>STATUS: <b style="color:#00ff00">PROTECTED</b></span>
         </div>
         <div class="lobby">
-            <div class="card" onclick="openTableSelect()" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('https://i.postimg.cc/FswJDnC7/1771937103914.jpg')">DREAM</div>
-            <div class="card" onclick="openTableSelect()" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('https://i.postimg.cc/0jW7kkCX/1771937107854.jpg')">SEXY</div>
-            <div class="card" onclick="openTableSelect()" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('https://i.postimg.cc/t7GpVPDp/1771937162161.jpg')">WM</div>
-            <div class="card" onclick="openTableSelect()" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('https://i.postimg.cc/bvgrc6gT/1771937152310.jpg')">SA</div>
+            <div class="card" onclick="openTableSelect()" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('https://i.postimg.cc/FswJDnC7/1771937103914.jpg')">DREAM BACCARAT</div>
+            <div class="card" onclick="openTableSelect()" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('https://i.postimg.cc/0jW7kkCX/1771937107854.jpg')">SEXY BACCARAT</div>
+            <div class="card" onclick="openTableSelect()" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('https://i.postimg.cc/t7GpVPDp/1771937162161.jpg')">WM BACCARAT</div>
+            <div class="card" onclick="openTableSelect()" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('https://i.postimg.cc/bvgrc6gT/1771937152310.jpg')">SA BACCARAT</div>
         </div>
     </div>
 
     <div id="pop-tool">
         <div class="popup-tool">
-            <div id="active-table" style="color:yellow; font-weight:bold; margin-bottom:10px; font-size:12px;">BÀN: --</div>
+            <div id="active-table" style="color:#00ffff; font-weight:bold; font-size:12px; text-shadow: 0 0 5px #00ffff;">PHÂN TÍCH: --</div>
             
-            <div style="display:flex; justify-content:space-around; margin-bottom:10px;">
-                <div onclick="setSide('P')" style="cursor:pointer;">
-                    <div style="font-size:9px; color:#0055ff; font-weight:bold;">PLAYER</div>
-                    <div id="p-val" style="width:65px; height:65px; background:#111; border:2px solid #444; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:2rem; color:var(--accent);">0</div>
+            <div class="score-display">
+                <div class="score-card" onclick="setSide('P')">
+                    <div style="font-size:10px; color:var(--player);">PLAYER</div>
+                    <div id="p-val" class="val-box" style="color:var(--player);">0</div>
                 </div>
-                <div onclick="setSide('B')" style="cursor:pointer;">
-                    <div style="font-size:9px; color:#cc0000; font-weight:bold;">BANKER</div>
-                    <div id="b-val" style="width:65px; height:65px; background:#111; border:2px solid #444; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:2rem; color:var(--accent);">0</div>
+                <div class="score-card" onclick="setSide('B')">
+                    <div style="font-size:10px; color:var(--banker);">BANKER</div>
+                    <div id="b-val" class="val-box" style="color:var(--banker);">0</div>
                 </div>
             </div>
 
@@ -125,25 +107,32 @@
                         <source src="https://image2url.com/r2/default/videos/1772288616151-f2d6d757-16c5-4c0f-bc60-49b0da6b679f.webm" type="video/mp4">
                     </video>
                 </div>
-                <div class="plasma-bolt"></div>
+                
                 <div class="res-container" id="res-box">
                     <div class="glow-circle"></div>
                     <div id="res-text" class="res-display">?</div>
                 </div>
             </div>
-            
-            <div id="log-text" style="font-size:9px; color:#00ff00; margin-top:5px; font-weight:bold;">SẴN SÀNG QUÉT...</div>
 
-            <button class="btn-exit-table" onclick="exitAndClear()">THOÁT BÀN & XOÁ DỮ LIỆU</button>
+            <div class="extra-info">
+                <div class="badge" id="badge-longbao">LONG BẢO</div>
+                <div class="badge" id="badge-caidoi">CÁI ĐÔI</div>
+                <div class="badge" id="badge-condoi">CON ĐÔI</div>
+                <div class="badge" id="badge-chanle">CHẴN/LẺ</div>
+            </div>
+            
+            <div id="log-text" style="font-size:10px; color:#00ff00; margin-top:12px; height:15px; overflow:hidden;">CHỜ NHẬP DỮ LIỆU...</div>
+
+            <button class="btn-exit-table" onclick="exitAndClear()">THOÁT & CLEAR DATA</button>
         </div>
     </div>
 
-    <div id="pop-select-table" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:1500; align-items:center; justify-content:center;">
-        <div class="popup-tool"><b style="color:var(--accent)">DANH SÁCH BÀN 1-C16</b><div id="table-list" style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:15px;"></div></div>
+    <div id="pop-select-table" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:1500; align-items:center; justify-content:center;">
+        <div class="popup-tool" style="max-height: 80vh; overflow: hidden;"><b style="color:var(--accent)">DANH SÁCH BÀN</b><div id="table-list" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:20px; overflow-y: auto; max-height: 60vh;"></div></div>
     </div>
 
     <div id="pop-num">
-        <div class="popup-tool" style="max-width:300px;">
+        <div class="popup-tool" style="max-width:320px; background:#000;">
             <b id="num-title" style="color:var(--accent)">NHẬP ĐIỂM</b>
             <div class="num-grid" id="num-pad"></div>
         </div>
@@ -151,7 +140,7 @@
 
 <script>
     let curSide = ''; let pScore = null; let bScore = null;
-    let ván = 1; let reminderTimer;
+    let vánCount = 1; let reminderTimer;
 
     function speak(text) {
         window.speechSynthesis.cancel();
@@ -164,29 +153,19 @@
         if(document.getElementById('phone').value.length >= 10) {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
-        } else { alert("Nhập SĐT!"); }
+        } else { alert("Mã kích hoạt không đúng!"); }
     }
 
-    // Nút Thoát và Xóa sạch dữ liệu
     function exitAndClear() {
-        // 1. Reset các biến dữ liệu
-        pScore = null; bScore = null; ván = 1; curSide = '';
-        
-        // 2. Reset giao diện
+        pScore = null; bScore = null; vánCount = 1;
         document.getElementById('p-val').innerText = "0";
         document.getElementById('b-val').innerText = "0";
         document.getElementById('res-text').innerText = "?";
-        document.getElementById('res-text').style.color = "#111";
         document.getElementById('res-box').classList.remove('active-res');
-        document.getElementById('log-text').innerText = "HỆ THỐNG ĐÃ XOÁ DỮ LIỆU.";
-        
-        // 3. Tắt bảng phân tích và dừng giọng nói
+        document.querySelectorAll('.badge').forEach(b => b.classList.remove('active'));
         document.getElementById('pop-tool').style.display = 'none';
         clearTimeout(reminderTimer);
         window.speechSynthesis.cancel();
-        
-        // 4. Thông báo
-        console.log("Dữ liệu đã được xóa sạch.");
     }
 
     const tList = document.getElementById('table-list');
@@ -195,11 +174,11 @@
 
     function createTItem(n) {
         let d = document.createElement('div'); 
-        d.style="background:#1a1a1a; padding:12px 0; border-radius:8px; font-size:10px; border: 1px solid #333; text-align:center;"; 
+        d.style="background:rgba(255,255,255,0.1); padding:15px 0; border-radius:10px; font-size:11px; border: 1px solid #333; text-align:center;"; 
         d.innerText = n;
         d.onclick = () => { 
             document.getElementById('pop-select-table').style.display='none'; 
-            document.getElementById('active-table').innerText = "BÀN: " + n; 
+            document.getElementById('active-table').innerText = "PHÂN TÍCH: " + n; 
             document.getElementById('pop-tool').style.display='flex';
             startVoiceSequence(); 
         };
@@ -243,31 +222,55 @@
 
     function runAI() {
         clearTimeout(reminderTimer);
-        const mon = document.getElementById('monitor');
-        const res = document.getElementById('res-text');
+        const resText = document.getElementById('res-text');
         const resBox = document.getElementById('res-box');
         const log = document.getElementById('log-text');
-
-        mon.classList.add('scanning');
+        
+        document.getElementById('monitor').classList.add('scanning');
         resBox.classList.remove('active-res');
-        res.innerText = "..";
-        log.innerText = "> PHÂN TÍCH THUẬT TOÁN AI...";
+        resText.innerText = "..";
+        log.innerText = "> ĐANG TÍNH TOÁN CÔNG THỨC...";
 
         setTimeout(() => {
-            mon.classList.remove('scanning');
+            document.getElementById('monitor').classList.remove('scanning');
             resBox.classList.add('active-res');
-            let val = Math.abs(Math.floor((bScore * 3.5 / 2) + pScore - ván)) % 2;
-            let final = (val === 0) ? "B" : "P";
-            res.innerText = final;
-            res.style.color = final === 'P' ? "#00ffff" : "#bc13fe";
-            log.innerHTML = `CHỐT: ${final}`;
-            pScore = null; bScore = null; ván++;
+
+            // --- CÔNG THỨC TỔNG HỢP V4.5 ---
+            // 1. Phép cộng nhân chia: (P + B) * (P - B + 10) / (ván + 1)
+            let rawCalculation = ((pScore + bScore) * (Math.abs(pScore - bScore) + 10)) / (vánCount + 1);
+            
+            // 2. Phép Modulo (Chẵn/Lẻ) để quyết định cửa
+            // Nếu phần nguyên của kết quả là Chẵn -> Banker, Lẻ -> Player
+            let checkChanLe = Math.floor(rawCalculation) % 2;
+            let finalResult = (checkChanLe === 0) ? "B" : "P";
+            
+            // --- PHÂN TÍCH KÈO PHỤ ---
+            document.querySelectorAll('.badge').forEach(b => b.classList.remove('active'));
+            
+            // Long Bảo: Chênh lệch điểm >= 4
+            if(Math.abs(pScore - bScore) >= 4) document.getElementById('badge-longbao').classList.add('active');
+            
+            // Cái đôi / Con đôi: Dựa trên Modulo riêng biệt
+            if(bScore > 0 && bScore % 2 === 0 && Math.random() > 0.6) document.getElementById('badge-caidoi').classList.add('active');
+            if(pScore > 0 && pScore % 3 === 0 && Math.random() > 0.6) document.getElementById('badge-condoi').classList.add('active');
+            
+            // Chẵn lẻ
+            document.getElementById('badge-chanle').innerText = (Math.floor(rawCalculation) % 2 === 0) ? "KÈO CHẴN" : "KÈO LẺ";
+            document.getElementById('badge-chanle').classList.add('active');
+
+            // Hiển thị kết quả chính
+            resText.innerText = finalResult;
+            resText.style.color = (finalResult === 'P') ? "#00ffff" : "#ff00ff";
+            log.innerHTML = `LỆNH: <span style="color:yellow">${finalResult}</span> | HỆ SỐ: ${rawCalculation.toFixed(1)}`;
+
+            // Reset điểm để nhập ván mới
+            pScore = null; bScore = null; vánCount++;
             document.getElementById('p-val').innerText = "0";
             document.getElementById('b-val').innerText = "0";
             resetReminder();
-        }, 5000);
+        }, 4000);
     }
 </script>
 </body>
-    </html>
-                    
+            </html>
+    
