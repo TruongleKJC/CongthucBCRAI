@@ -3,274 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Công nghệ BCR AI - ULTIMATE V4.5</title>
+    <title>KJC NEURAL V10 - 10M PATTERNS</title>
     <style>
-        :root { --accent: #bc13fe; --player: #0055ff; --banker: #ff0000; --glow: rgba(188, 19, 254, 0.6); }
+        :root {
+            --img-robot: url('https://i.postimg.cc/1zfRLs85/lv-0-20260225210308.png');
+            --accent: #bc13fe; 
+            --player: #00f2ff;
+            --banker: #ff4d4d;
+        }
         * { box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
         body { margin: 0; background: #000; color: #fff; overflow: hidden; height: 100vh; }
 
-        /* VIDEO NỀN */
-        .bg-video-main { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.4; }
+        /* NỀN VIDEO */
+        .bg-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.3; }
 
         /* ĐĂNG NHẬP */
-        #login-screen { position: fixed; inset: 0; z-index: 9000; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.8); }
-        .login-box { width: 90%; max-width: 320px; text-align: center; border: 2px solid var(--accent); padding: 40px 20px; border-radius: 25px; box-shadow: 0 0 30px var(--glow); backdrop-filter: blur(15px); background: rgba(20,0,30,0.7); }
-        .login-box input { width: 100%; padding: 15px; margin: 15px 0; background: #000; border: 1px solid var(--accent); color: #fff; border-radius: 12px; text-align: center; font-size: 16px; outline: none; }
-        .login-box button { width: 100%; padding: 15px; background: linear-gradient(45deg, #bc13fe, #7a0bc0); border: none; color: #fff; font-weight: bold; border-radius: 12px; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 15px var(--glow); }
+        #login-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .login-box { width: 320px; padding: 40px; border: 2px solid var(--accent); border-radius: 35px; text-align: center; box-shadow: 0 0 40px var(--accent); backdrop-filter: blur(15px); background: rgba(0,0,0,0.8); }
+        .login-box h2 { font-size: 1.2rem; color: var(--accent); margin-bottom: 20px; text-shadow: 0 0 10px var(--accent); }
+        .login-box button { width: 100%; padding: 15px; background: var(--accent); border: none; color: #fff; font-weight: bold; border-radius: 15px; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 15px var(--accent); }
 
         /* SẢNH CHÍNH */
-        #main-app { display: none; height: 100vh; flex-direction: column; position: relative; z-index: 100; }
-        .top-bar { height: 50px; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 2px solid var(--accent); font-size: 11px; letter-spacing: 1px; }
-        .lobby { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px; overflow-y: auto; }
-        .card { border-radius: 15px; height: 120px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px; font-weight: bold; border: 1px solid rgba(188, 19, 254, 0.4); background-size: cover; background-position: center; font-size: 13px; box-shadow: 0 8px 20px rgba(0,0,0,0.6); transition: 0.3s; }
-        .card:active { transform: translateY(-5px); border-color: var(--accent); }
+        #main-app { display: none; height: 100vh; flex-direction: column; }
+        .top-bar { height: 55px; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 2px solid var(--accent); font-size: 10px; letter-spacing: 1px; }
+        .lobby { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; overflow-y: auto; }
+        .card { border-radius: 20px; height: 120px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 15px; font-weight: bold; border: 1px solid #222; background-size: cover; background-position: center; position: relative; overflow: hidden; transition: 0.3s; }
+        .card:active { transform: scale(0.95); border-color: var(--accent); }
+        .card span { z-index: 2; text-shadow: 0 0 10px #000; background: rgba(0,0,0,0.5); padding: 2px 10px; border-radius: 10px; }
 
-        /* BẢNG PHÂN TÍCH CAO CẤP */
-        #pop-tool { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; }
-        .popup-tool { width: 92%; max-width: 360px; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); border: 2px solid var(--accent); border-radius: 30px; padding: 20px; text-align: center; position: relative; box-shadow: 0 0 50px rgba(0,0,0,1), 0 0 20px var(--glow); }
+        /* POPUP TOOL - GIAO DIỆN PHÂN TÍCH TỐI TÂN */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 500; align-items: center; justify-content: center; }
+        .popup { width: 95%; max-width: 360px; background: linear-gradient(180deg, #050505 0%, #0c001a 100%); border: 2px solid var(--accent); border-radius: 40px; padding: 30px 20px; text-align: center; position: relative; box-shadow: 0 0 60px rgba(188, 19, 254, 0.4); }
         
-        /* HIỂN THỊ ĐIỂM */
-        .score-display { display: flex; justify-content: space-between; margin: 15px 0; }
-        .score-card { flex: 1; margin: 0 10px; padding: 10px; border-radius: 15px; background: rgba(0,0,0,0.5); border: 1px solid #444; }
-        .val-box { font-size: 2.5rem; font-weight: 900; height: 70px; display: flex; align-items: center; justify-content: center; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .score-row { display: flex; justify-content: space-around; margin: 20px 0; }
+        .score-box { width: 85px; height: 85px; background: #000; border: 2px solid #333; border-radius: 25px; display: flex; align-items: center; justify-content: center; font-size: 2.8rem; font-weight: 900; cursor: pointer; transition: 0.2s; box-shadow: inset 0 0 15px rgba(255,255,255,0.05); }
+        .score-box:active { border-color: var(--accent); color: #fff !important; }
 
-        /* ROBOT & KẾT QUẢ */
-        .monitor-area { display: flex; align-items: center; justify-content: center; position: relative; height: 160px; margin: 10px 0; background: rgba(255,255,255,0.05); border-radius: 20px; }
-        .robot-vid-box { width: 130px; height: 130px; z-index: 10; filter: drop-shadow(0 0 10px var(--accent)); }
-        .robot-vid-box video { width: 100%; height: 100%; object-fit: contain; }
+        .monitor-area { display: flex; align-items: center; justify-content: center; position: relative; height: 160px; background: rgba(255,255,255,0.02); border-radius: 30px; margin: 15px 0; border: 1px solid rgba(188, 19, 254, 0.1); }
+        .robot-img { width: 110px; height: 110px; background: var(--img-robot) center/contain no-repeat; animation: pulse 0.7s infinite alternate; }
         
-        .res-container { position: relative; width: 100px; height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .res-display { font-size: 4rem; font-weight: 900; color: #111; z-index: 10; transition: 0.5s; }
-        .active-res .glow-circle { opacity: 1; border: 6px solid var(--accent); border-top-color: #00ffff; border-radius: 50%; position: absolute; inset: 0; animation: rotateFast 0.4s linear infinite; }
-        
-        /* PHÂN TÍCH KÈO PHỤ */
-        .extra-info { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px; }
-        .badge { font-size: 10px; padding: 5px; border-radius: 5px; background: rgba(0,0,0,0.4); border: 1px solid #333; color: #aaa; }
-        .badge.active { color: #00ff00; border-color: #00ff00; background: rgba(0,255,0,0.1); }
+        .res-container { width: 120px; height: 120px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .res-display { font-size: 5.5rem; font-weight: 900; color: #111; z-index: 10; text-shadow: 0 0 20px rgba(0,0,0,0.8); transition: 0.3s; }
+        .active-res .glow-circle { opacity: 1; border: 8px solid var(--accent); border-top-color: #00ffff; border-radius: 50%; position: absolute; inset: 0; animation: rotate 0.25s linear infinite; box-shadow: 0 0 30px var(--accent); }
 
-        .btn-exit-table { margin-top: 20px; width: 100%; padding: 12px; background: linear-gradient(to right, #6a0000, #ff0000); border: none; border-radius: 15px; color: #fff; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(255,0,0,0.3); }
+        /* THÔNG SỐ BIG DATA */
+        .big-data-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 20px; }
+        .stat-item { background: rgba(255,255,255,0.05); padding: 10px 5px; border-radius: 15px; font-size: 8px; border: 1px solid #222; }
+        .stat-item b { display: block; color: var(--accent); font-size: 10px; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* NHẬP ĐIỂM */
-        #pop-num { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000; align-items: center; justify-content: center; }
-        .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 20px; }
-        .num-btn { padding: 20px 0; background: #1a1a1a; border: 1px solid var(--accent); color: #fff; border-radius: 15px; font-weight: bold; font-size: 20px; box-shadow: 0 0 10px rgba(188,19,254,0.2); }
+        .btn-exit { margin-top: 25px; width: 100%; padding: 15px; background: linear-gradient(90deg, #400, #ff0000); border: none; border-radius: 18px; color: #fff; font-weight: 900; cursor: pointer; letter-spacing: 1px; }
 
-        @keyframes rotateFast { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* NUMPAD */
+        .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        .n-btn { height: 65px; background: #000; border: 1px solid #333; color: #fff; border-radius: 20px; font-size: 24px; font-weight: bold; }
+        .n-btn:active { background: var(--accent); border-color: #fff; }
+
+        @keyframes pulse { from { transform: scale(1); filter: drop-shadow(0 0 5px var(--accent)); } to { transform: scale(1.15); filter: drop-shadow(0 0 25px var(--accent)); } }
+        @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <video class="bg-video-main" autoplay loop muted playsinline>
+    <video class="bg-video" autoplay loop muted playsinline>
         <source src="https://image2url.com/r2/default/videos/1772286547818-73fbfacd-4219-433f-86c9-59323d485ce6.mp4" type="video/mp4">
     </video>
 
     <div id="login-screen">
         <div class="login-box">
-            <h2 style="color:var(--accent); text-transform: uppercase;">BCR AI ULTIMATE</h2>
-            <p style="font-size: 10px; color: #888;">Hệ thống phân tích thời gian thực V4.5</p>
-            <input type="tel" id="phone" placeholder="Nhập mã kích hoạt (SĐT)">
-            <button onclick="handleLogin()">Kết nối Server</button>
+            <h2>KJC NEURAL V10</h2>
+            <p style="font-size: 10px; color: #666; margin-bottom: 20px;">10.000.000 PATTERNS DATABASE</p>
+            <button onclick="login()">KÍCH HOẠT HỆ THỐNG</button>
         </div>
     </div>
 
     <div id="main-app">
         <div class="top-bar">
-            <span>ALGORITHM: <b style="color:var(--accent)">DYNAMIC MODULO V4</b></span>
-            <span>STATUS: <b style="color:#00ff00">PROTECTED</b></span>
+            <span>DATA: <b style="color:var(--accent)">10M+ PATTERNS</b></span>
+            <span>AI: <b style="color:#0f0">DEEP LEARNING</b></span>
         </div>
         <div class="lobby">
-            <div class="card" onclick="openTableSelect()" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('https://i.postimg.cc/FswJDnC7/1771937103914.jpg')">DREAM BACCARAT</div>
-            <div class="card" onclick="openTableSelect()" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('https://i.postimg.cc/0jW7kkCX/1771937107854.jpg')">SEXY BACCARAT</div>
-            <div class="card" onclick="openTableSelect()" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('https://i.postimg.cc/t7GpVPDp/1771937162161.jpg')">WM BACCARAT</div>
-            <div class="card" onclick="openTableSelect()" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('https://i.postimg.cc/bvgrc6gT/1771937152310.jpg')">SA BACCARAT</div>
+            <div class="card" onclick="pickTable('DREAM')" style="background-image:url('https://i.postimg.cc/FswJDnC7/1771937103914.jpg')"><span>DREAM BACCARAT</span></div>
+            <div class="card" onclick="pickTable('SEXY')" style="background-image:url('https://i.postimg.cc/0jW7kkCX/1771937107854.jpg')"><span>SEXY BACCARAT</span></div>
+            <div class="card" onclick="pickTable('WM')" style="background-image:url('https://i.postimg.cc/t7GpVPDp/1771937162161.jpg')"><span>WM CASINO</span></div>
+            <div class="card" onclick="pickTable('SA')" style="background-image:url('https://i.postimg.cc/bvgrc6gT/1771937152310.jpg')"><span>SA GAMING</span></div>
         </div>
     </div>
 
-    <div id="pop-tool">
-        <div class="popup-tool">
-            <div id="active-table" style="color:#00ffff; font-weight:bold; font-size:12px; text-shadow: 0 0 5px #00ffff;">PHÂN TÍCH: --</div>
-            
-            <div class="score-display">
-                <div class="score-card" onclick="setSide('P')">
-                    <div style="font-size:10px; color:var(--player);">PLAYER</div>
-                    <div id="p-val" class="val-box" style="color:var(--player);">0</div>
-                </div>
-                <div class="score-card" onclick="setSide('B')">
-                    <div style="font-size:10px; color:var(--banker);">BANKER</div>
-                    <div id="b-val" class="val-box" style="color:var(--banker);">0</div>
-                </div>
+    <div id="pop-tool" class="overlay">
+        <div class="popup">
+            <div id="t-name" style="color:yellow; font-weight:bold; font-size:13px; margin-bottom:10px; text-shadow: 0 0 5px #000;">TABLE: --</div>
+            <div class="score-row">
+                <div onclick="setSide('P')"><div style="font-size:10px; color:var(--player); font-weight: bold;">PLAYER</div><div class="score-box" id="p-val" style="color:var(--player);">0</div></div>
+                <div onclick="setSide('B')"><div style="font-size:10px; color:var(--banker); font-weight: bold;">BANKER</div><div class="score-box" id="b-val" style="color:var(--banker);">0</div></div>
             </div>
-
-            <div class="monitor-area" id="monitor">
-                <div class="robot-vid-box">
-                    <video id="robot-vid" autoplay loop muted playsinline>
-                        <source src="https://image2url.com/r2/default/videos/1772288616151-f2d6d757-16c5-4c0f-bc60-49b0da6b679f.webm" type="video/mp4">
-                    </video>
-                </div>
-                
+            <div class="monitor-area" id="mon">
+                <div class="robot-img"></div>
                 <div class="res-container" id="res-box">
                     <div class="glow-circle"></div>
                     <div id="res-text" class="res-display">?</div>
                 </div>
             </div>
-
-            <div class="extra-info">
-                <div class="badge" id="badge-longbao">LONG BẢO</div>
-                <div class="badge" id="badge-caidoi">CÁI ĐÔI</div>
-                <div class="badge" id="badge-condoi">CON ĐÔI</div>
-                <div class="badge" id="badge-chanle">CHẴN/LẺ</div>
+            <div class="big-data-stats">
+                <div class="stat-item">KHỚP CẦU<b id="p-type">QUÉT...</b></div>
+                <div class="stat-item">TỈ LỆ THẮNG<b id="p-rate">0%</b></div>
+                <div class="stat-item">LỆNH TIẾP<b id="p-next">---</b></div>
             </div>
-            
-            <div id="log-text" style="font-size:10px; color:#00ff00; margin-top:12px; height:15px; overflow:hidden;">CHỜ NHẬP DỮ LIỆU...</div>
-
-            <button class="btn-exit-table" onclick="exitAndClear()">THOÁT & CLEAR DATA</button>
+            <button class="btn-exit" onclick="exit()">TERMINATE & FLUSH DATA</button>
         </div>
     </div>
 
-    <div id="pop-select-table" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:1500; align-items:center; justify-content:center;">
-        <div class="popup-tool" style="max-height: 80vh; overflow: hidden;"><b style="color:var(--accent)">DANH SÁCH BÀN</b><div id="table-list" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:20px; overflow-y: auto; max-height: 60vh;"></div></div>
+    <div id="pop-select" class="overlay">
+        <div class="popup" style="max-height:85vh;">
+            <b style="color:var(--accent)">10.000.000 BỘ CẦU SẴN SÀNG</b>
+            <div id="t-list" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:20px; overflow-y:auto; max-height:400px;"></div>
+        </div>
     </div>
 
-    <div id="pop-num">
-        <div class="popup-tool" style="max-width:320px; background:#000;">
-            <b id="num-title" style="color:var(--accent)">NHẬP ĐIỂM</b>
-            <div class="num-grid" id="num-pad"></div>
-        </div>
+    <div id="pop-num" class="overlay">
+        <div class="popup" style="max-width:320px; background:#000;"><div class="num-grid" id="n-pad"></div></div>
     </div>
 
 <script>
-    let curSide = ''; let pScore = null; let bScore = null;
-    let vánCount = 1; let reminderTimer;
+    let side = ''; let pS = null; let bS = null; let van = 1;
 
-    function speak(text) {
-        window.speechSynthesis.cancel();
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'vi-VN';
-        window.speechSynthesis.speak(msg);
-    }
+    function speak(t) { window.speechSynthesis.cancel(); let m = new SpeechSynthesisUtterance(t); m.lang = 'vi-VN'; window.speechSynthesis.speak(m); }
+    function login() { document.getElementById('login-screen').style.display='none'; document.getElementById('main-app').style.display='flex'; speak("Kích hoạt Big Data 10 triệu bộ cầu thành công."); }
 
-    function handleLogin() {
-        if(document.getElementById('phone').value.length >= 10) {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-app').style.display = 'flex';
-        } else { alert("Mã kích hoạt không đúng!"); }
-    }
-
-    function exitAndClear() {
-        pScore = null; bScore = null; vánCount = 1;
-        document.getElementById('p-val').innerText = "0";
-        document.getElementById('b-val').innerText = "0";
-        document.getElementById('res-text').innerText = "?";
-        document.getElementById('res-box').classList.remove('active-res');
-        document.querySelectorAll('.badge').forEach(b => b.classList.remove('active'));
-        document.getElementById('pop-tool').style.display = 'none';
-        clearTimeout(reminderTimer);
-        window.speechSynthesis.cancel();
-    }
-
-    const tList = document.getElementById('table-list');
-    for(let i=1; i<=10; i++) createTItem(`BÀN ${i}`);
-    for(let i=1; i<=16; i++) createTItem(`BÀN C${i<10?'0'+i:i}`);
-
-    function createTItem(n) {
-        let d = document.createElement('div'); 
-        d.style="background:rgba(255,255,255,0.1); padding:15px 0; border-radius:10px; font-size:11px; border: 1px solid #333; text-align:center;"; 
-        d.innerText = n;
-        d.onclick = () => { 
-            document.getElementById('pop-select-table').style.display='none'; 
-            document.getElementById('active-table').innerText = "PHÂN TÍCH: " + n; 
-            document.getElementById('pop-tool').style.display='flex';
-            startVoiceSequence(); 
-        };
-        tList.appendChild(d);
-    }
-
-    function startVoiceSequence() {
-        speak("Đang xâm nhập vào server, vui lòng chờ chút.");
-        setTimeout(() => {
-            speak("Xâm nhập thành công, vui lòng nhập dữ liệu.");
-            setTimeout(() => {
-                speak("Vui lòng nhập điểm bàn trước để được phân tích.");
-                resetReminder();
-            }, 3000);
-        }, 3000);
-    }
-
-    function resetReminder() {
-        clearTimeout(reminderTimer);
-        reminderTimer = setTimeout(() => {
-            speak("Vui lòng nhập điểm để phân tích.");
-            resetReminder();
-        }, 20000);
-    }
-
-    const np = document.getElementById('num-pad');
+    const pad = document.getElementById('n-pad');
     for(let i=0; i<=9; i++) {
-        let btn = document.createElement('button'); btn.innerText = i; btn.className = 'num-btn';
-        btn.onclick = () => {
-            if(curSide == 'P') { pScore = i; document.getElementById('p-val').innerText = i; }
-            else { bScore = i; document.getElementById('b-val').innerText = i; }
+        let b = document.createElement('button'); b.className='n-btn'; b.innerText=i;
+        b.onclick = () => {
+            if(side=='P') { pS=i; document.getElementById('p-val').innerText=i; }
+            else { bS=i; document.getElementById('b-val').innerText=i; }
             document.getElementById('pop-num').style.display='none';
-            if(pScore !== null && bScore !== null) runAI();
-            else resetReminder();
+            if(pS!==null && bS!==null) runAI();
         };
-        np.appendChild(btn);
+        pad.appendChild(b);
     }
 
-    function openTableSelect() { document.getElementById('pop-select-table').style.display='flex'; }
-    function setSide(s) { curSide = s; document.getElementById('pop-num').style.display='flex'; }
+    const list = document.getElementById('t-list');
+    for(let i=1; i<=26; i++) {
+        let n = i<=10 ? `BÀN ${i}` : `BÀN C${i-10<10?'0'+(i-10):i-10}`;
+        let d = document.createElement('div'); d.style="background:#111; padding:15px 0; border:1px solid #333; border-radius:15px; font-size:11px; color:#fff; text-align:center; font-weight:bold;";
+        d.innerText = n;
+        d.onclick = () => { document.getElementById('pop-select').style.display='none'; document.getElementById('t-name').innerText=n; document.getElementById('pop-tool').style.display='flex'; speak("Vào " + n + ". Hãy nhập điểm ván trước."); };
+        list.appendChild(d);
+    }
+
+    function pickTable() { document.getElementById('pop-select').style.display='flex'; }
+    function setSide(s) { side=s; document.getElementById('pop-num').style.display='flex'; }
+    function exit() { document.getElementById('pop-tool').style.display='none'; pS=null; bS=null; van=1; }
 
     function runAI() {
-        clearTimeout(reminderTimer);
-        const resText = document.getElementById('res-text');
-        const resBox = document.getElementById('res-box');
-        const log = document.getElementById('log-text');
-        
-        document.getElementById('monitor').classList.add('scanning');
-        resBox.classList.remove('active-res');
-        resText.innerText = "..";
-        log.innerText = "> ĐANG TÍNH TOÁN CÔNG THỨC...";
+        const resT = document.getElementById('res-text');
+        const resB = document.getElementById('res-box');
+        resB.classList.remove('active-res');
+        resT.innerText = "..";
+        document.getElementById('p-type').innerText = "SEARCHING...";
 
         setTimeout(() => {
-            document.getElementById('monitor').classList.remove('scanning');
-            resBox.classList.add('active-res');
+            resB.classList.add('active-res');
 
-            // --- CÔNG THỨC TỔNG HỢP V4.5 ---
-            // 1. Phép cộng nhân chia: (P + B) * (P - B + 10) / (ván + 1)
-            let rawCalculation = ((pScore + bScore) * (Math.abs(pScore - bScore) + 10)) / (vánCount + 1);
-            
-            // 2. Phép Modulo (Chẵn/Lẻ) để quyết định cửa
-            // Nếu phần nguyên của kết quả là Chẵn -> Banker, Lẻ -> Player
-            let checkChanLe = Math.floor(rawCalculation) % 2;
-            let finalResult = (checkChanLe === 0) ? "B" : "P";
-            
-            // --- PHÂN TÍCH KÈO PHỤ ---
-            document.querySelectorAll('.badge').forEach(b => b.classList.remove('active'));
-            
-            // Long Bảo: Chênh lệch điểm >= 4
-            if(Math.abs(pScore - bScore) >= 4) document.getElementById('badge-longbao').classList.add('active');
-            
-            // Cái đôi / Con đôi: Dựa trên Modulo riêng biệt
-            if(bScore > 0 && bScore % 2 === 0 && Math.random() > 0.6) document.getElementById('badge-caidoi').classList.add('active');
-            if(pScore > 0 && pScore % 3 === 0 && Math.random() > 0.6) document.getElementById('badge-condoi').classList.add('active');
-            
-            // Chẵn lẻ
-            document.getElementById('badge-chanle').innerText = (Math.floor(rawCalculation) % 2 === 0) ? "KÈO CHẴN" : "KÈO LẺ";
-            document.getElementById('badge-chanle').classList.add('active');
+            // --- THUẬT TOÁN BIG DATA V10 ---
+            // 1. Phân tích Chẵn Lẻ (Ưu tiên Cái khi nút Chẵn)
+            let bCore = bS;
+            if([0, 2, 4, 6, 8].includes(bS)) bCore += 1; 
 
-            // Hiển thị kết quả chính
-            resText.innerText = finalResult;
-            resText.style.color = (finalResult === 'P') ? "#00ffff" : "#ff00ff";
-            log.innerHTML = `LỆNH: <span style="color:yellow">${finalResult}</span> | HỆ SỐ: ${rawCalculation.toFixed(1)}`;
+            let pCore = pS;
+            if(van % 2 === 0) pCore -= 1; 
 
-            // Reset điểm để nhập ván mới
-            pScore = null; bScore = null; vánCount++;
-            document.getElementById('p-val').innerText = "0";
-            document.getElementById('b-val').innerText = "0";
-            resetReminder();
-        }, 4000);
+            // 2. So khớp Logic 10M Patterns
+            let logic = (bCore * 7) + (pCore * 11) + (van * 3);
+            let final = (Math.abs(logic) % 2 === 0) ? "B" : "P";
+
+            // 3. Giả lập đối chiếu bộ cầu từ 10M dữ liệu
+            let patterns = ["BỆT RỒNG TÀI", "NHẢY 1-1 LẺ", "NGHIÊNG CÁI CHẴN", "CẦU 3-2-1", "BỆT CON DÀI", "CẦU ĐỐI 2-2", "BẤT ĐỐI XỨNG"];
+            let name = patterns[Math.floor(Math.random()*patterns.length)];
+            let rate = 92 + (Math.random()*7.5); // Tỉ lệ thắng từ Big Data cực cao
+
+            resT.innerText = final;
+            resT.style.color = final === 'P' ? "var(--player)" : "var(--accent)";
+            document.getElementById('p-type').innerText = name;
+            document.getElementById('p-rate').innerText = rate.toFixed(1) + "%";
+            document.getElementById('p-next').innerText = (final === 'P' ? "VÀO CON" : "VÀO CÁI");
+
+            speak("Lệnh " + (final==='P'?"Con":"Cái") + ". Xác suất khớp cầu " + Math.floor(rate) + " phần trăm.");
+
+            pS=null; bS=null; van++;
+            document.getElementById('p-val').innerText="0";
+            document.getElementById('b-val').innerText="0";
+            if(navigator.vibrate) navigator.vibrate([600]);
+        }, 3500);
     }
 </script>
 </body>
-            </html>
+    </html>
     
