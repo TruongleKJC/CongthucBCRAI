@@ -5,212 +5,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KJC V12 - ID: 0nbtruonglek6</title>
     <style>
-        :root {
-            --img-robot: url('https://i.postimg.cc/1zfRLs85/lv-0-20260225210308.png');
-            --accent: #bc13fe; 
-            --player: #00f2ff;
-            --banker: #ff4d4d;
-            --neon-gold: #ffd700;
-        }
-        * { box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
-        body { margin: 0; background: #000; color: #fff; overflow: hidden; height: 100vh; }
+        :root { --accent: #bc13fe; --p: #00f2ff; --b: #ff4d4d; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; font-weight: bold; }
+        body { margin: 0; background: #000; color: #fff; overflow: hidden; }
 
-        /* VIDEO NỀN & HIỆU ỨNG TRUY CẬP */
-        .bg-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.25; }
+        /* Giao diện thu nhỏ tối ưu lag */
+        #login-screen { position: fixed; inset: 0; background: #050505; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .login-box { width: 280px; padding: 20px; border: 1px solid var(--accent); border-radius: 20px; text-align: center; box-shadow: 0 0 20px var(--accent); }
         
-        /* ĐĂNG NHẬP */
-        #login-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
-        .login-box { width: 340px; padding: 40px; border: 2px solid var(--accent); border-radius: 40px; text-align: center; box-shadow: 0 0 50px var(--accent); background: rgba(0,0,0,0.9); border-bottom: 5px solid var(--neon-gold); }
-        .id-badge { color: var(--neon-gold); font-size: 14px; font-weight: bold; margin-bottom: 15px; border: 1px dashed var(--neon-gold); padding: 5px; }
+        #main-app { display: none; height: 100vh; flex-direction: column; background: #000; }
+        .top-bar { height: 40px; background: #111; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid var(--accent); font-size: 10px; color: var(--accent); }
 
-        /* GIAO DIỆN CHÍNH */
-        #main-app { display: none; height: 100vh; flex-direction: column; }
-        .top-bar { height: 60px; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 2px solid var(--accent); }
-        .server-status { font-size: 9px; line-height: 1.5; }
-        
-        .lobby { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; overflow-y: auto; }
-        .card { border-radius: 20px; height: 130px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; border: 1px solid #333; background-size: cover; background-position: center; position: relative; overflow: hidden; }
-        .card::before { content: 'UPLINK: 5RR99'; position: absolute; top: 5px; left: 5px; font-size: 7px; color: var(--neon-gold); }
-        .card span { z-index: 2; background: rgba(0,0,0,0.7); width: 100%; text-align: center; padding: 10px 0; }
+        .lobby { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; }
+        .card { height: 80px; border-radius: 12px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 11px; background-size: cover; position: relative; }
+        .card::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.5); border-radius: 12px; }
+        .card span { z-index: 2; }
 
-        /* PHÂN TÍCH CHUYÊN SÂU */
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 500; align-items: center; justify-content: center; }
-        .popup { width: 95%; max-width: 380px; background: #050505; border: 2px solid var(--accent); border-radius: 45px; padding: 30px 20px; text-align: center; position: relative; box-shadow: 0 0 70px rgba(188, 19, 254, 0.5); }
-        
-        .score-row { display: flex; justify-content: space-around; margin: 20px 0; }
-        .score-box { width: 85px; height: 85px; background: #000; border: 2px solid #222; border-radius: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; cursor: pointer; }
-        .score-box small { font-size: 10px; margin-top: -5px; }
+        /* BẢNG PHÂN TÍCH MINI (Slim Mode) */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 500; align-items: center; justify-content: center; }
+        .popup { width: 300px; background: #0a0a0a; border: 2px solid var(--accent); border-radius: 25px; padding: 15px; text-align: center; box-shadow: 0 0 30px var(--accent); }
 
-        .monitor-area { display: flex; align-items: center; justify-content: center; position: relative; height: 170px; background: rgba(188, 19, 254, 0.05); border-radius: 35px; margin: 15px 0; border: 1px dashed var(--accent); }
-        .robot-img { width: 110px; height: 110px; background: var(--img-robot) center/contain no-repeat; animation: glitch 1s infinite alternate; }
-        
-        .res-container { width: 130px; height: 130px; position: relative; display: flex; align-items: center; justify-content: center; }
-        .res-display { font-size: 5.8rem; font-weight: 900; color: #111; z-index: 10; }
-        .active-res .glow-circle { opacity: 1; border: 8px solid var(--accent); border-top-color: var(--neon-gold); border-radius: 50%; position: absolute; inset: 0; animation: rotate 0.2s linear infinite; }
+        .score-row { display: flex; justify-content: space-around; margin: 10px 0; }
+        .score-box { width: 65px; height: 65px; background: #000; border: 1px solid #444; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer; }
 
-        /* THÔNG SỐ XÂM NHẬP */
-        .intruder-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-        .stat-box { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 15px; border: 1px solid #333; font-size: 10px; }
-        .stat-box b { display: block; color: var(--neon-gold); font-size: 13px; }
+        .monitor { height: 100px; display: flex; align-items: center; justify-content: center; position: relative; background: rgba(188,19,254,0.05); border-radius: 15px; margin: 10px 0; }
+        .robot-img { width: 70px; height: 70px; background: url('https://i.postimg.cc/1zfRLs85/lv-0-20260225210308.png') center/contain no-repeat; animation: pulse 0.8s infinite alternate; }
+        .res-display { font-size: 4rem; font-weight: 900; position: absolute; right: 40px; text-shadow: 0 0 15px #fff; }
 
-        .btn-exit { margin-top: 25px; width: 100%; padding: 18px; background: linear-gradient(45deg, #200, #b00); border: none; border-radius: 20px; color: #fff; font-weight: 900; cursor: pointer; box-shadow: 0 0 20px rgba(255,0,0,0.3); }
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 9px; margin-top: 10px; }
+        .stat-btn { background: #111; padding: 5px; border-radius: 8px; border: 1px solid #222; }
+        .stat-btn b { color: var(--accent); display: block; }
 
-        /* NUMPAD */
-        .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
-        .n-btn { height: 60px; background: #111; border: 1px solid #444; color: #fff; border-radius: 15px; font-size: 22px; font-weight: bold; }
+        .n-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+        .n-btn { padding: 15px 0; background: #111; border: 1px solid #333; color: #fff; border-radius: 10px; font-size: 18px; }
 
-        @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(-2px, -2px); } 60% { transform: translate(2px, 2px); } 80% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
-        @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulse { from { transform: scale(1); opacity: 0.8; } to { transform: scale(1.1); opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <video class="bg-video" autoplay loop muted playsinline>
-        <source src="https://image2url.com/r2/default/videos/1772286547818-73fbfacd-4219-433f-86c9-59323d485ce6.mp4" type="video/mp4">
-    </video>
-
     <div id="login-screen">
         <div class="login-box">
-            <div class="id-badge">ID: 0nbtruonglek6</div>
-            <h2 style="color:var(--accent); font-size: 18px;">UPLINK TO 5RR99</h2>
-            <p style="font-size: 10px; color: #666; margin-bottom: 25px;">KÍCH HOẠT XÂM NHẬP SERVER</p>
-            <button onclick="login()">BẮT ĐẦU QUÉT MÃ</button>
+            <h3 style="color:var(--accent); margin:0 0 10px 0;">5RR99 HACKER</h3>
+            <p style="font-size: 9px; color: #888;">UPLINK ID: 0nbtruonglek6</p>
+            <button onclick="login()">XÂM NHẬP SERVER</button>
         </div>
     </div>
 
     <div id="main-app">
         <div class="top-bar">
-            <div class="server-status">
-                SERVER: <b style="color:var(--neon-gold)">5RR99_CORE</b><br>
-                AUTH: <b style="color:var(--player)">0nbtruonglek6</b>
-            </div>
-            <div style="text-align: right; font-size: 9px;">
-                DATABASE: <b style="color:#0f0">10M PATTERNS</b><br>
-                PING: <b style="color:#0f0">12ms</b>
-            </div>
+            <span>UPLINK: <b style="color:#0f0">5RR99.COM</b></span>
+            <span>ID: <b style="color:#fff">0nbtruonglek6</b></span>
         </div>
         <div class="lobby">
-            <div class="card" onclick="pickTable()" style="background-image:url('https://i.postimg.cc/FswJDnC7/1771937103914.jpg')"><span>DREAM BACCARAT</span></div>
-            <div class="card" onclick="pickTable()" style="background-image:url('https://i.postimg.cc/0jW7kkCX/1771937107854.jpg')"><span>SEXY BACCARAT</span></div>
-            <div class="card" onclick="pickTable()" style="background-image:url('https://i.postimg.cc/t7GpVPDp/1771937162161.jpg')"><span>WM CASINO</span></div>
-            <div class="card" onclick="pickTable()" style="background-image:url('https://i.postimg.cc/bvgrc6gT/1771937152310.jpg')"><span>EVO GAMING</span></div>
+            <div class="card" onclick="openTool('DREAM')" style="background-image:url('https://i.postimg.cc/FswJDnC7/1771937103914.jpg')"><span>DREAM</span></div>
+            <div class="card" onclick="openTool('SEXY')" style="background-image:url('https://i.postimg.cc/0jW7kkCX/1771937107854.jpg')"><span>SEXY</span></div>
+            <div class="card" onclick="openTool('WM')" style="background-image:url('https://i.postimg.cc/t7GpVPDp/1771937162161.jpg')"><span>WM</span></div>
+            <div class="card" onclick="openTool('SA')" style="background-image:url('https://i.postimg.cc/bvgrc6gT/1771937152310.jpg')"><span>SA</span></div>
         </div>
     </div>
 
     <div id="pop-tool" class="overlay">
         <div class="popup">
-            <div id="t-name" style="color:var(--neon-gold); font-weight:bold; font-size:14px; margin-bottom:15px;">TARGET: 5RR99_TABLE_--</div>
-            
+            <div style="font-size:10px; color:yellow; margin-bottom:5px;" id="t-info">BÀN: --</div>
             <div class="score-row">
-                <div onclick="setSide('P')"><div class="score-box" id="p-val" style="color:var(--player);"><small>PLAYER</small>0</div></div>
-                <div onclick="setSide('B')"><div class="score-box" id="b-val" style="color:var(--banker);"><small>BANKER</small>0</div></div>
+                <div onclick="setS('P')"><div style="font-size:9px; color:var(--p);">PLAYER</div><div class="score-box" id="pv" style="color:var(--p);">0</div></div>
+                <div onclick="setS('B')"><div style="font-size:9px; color:var(--b);">BANKER</div><div class="score-box" id="bv" style="color:var(--b);">0</div></div>
             </div>
-
-            <div class="monitor-area" id="mon">
+            <div class="monitor">
                 <div class="robot-img"></div>
-                <div class="res-container" id="res-box">
-                    <div class="glow-circle"></div>
-                    <div id="res-text" class="res-display">?</div>
-                </div>
+                <div id="res" class="res-display">?</div>
             </div>
-
-            <div class="intruder-stats">
-                <div class="stat-box">PATTERN MATCH<b id="p-type">UPLINKING...</b></div>
-                <div class="stat-box">XÁC SUẤT THẮNG<b id="p-rate">0%</b></div>
+            <div class="stats">
+                <div class="stat-btn">MATCH CẦU<b id="st-c">9.99M+</b></div>
+                <div class="stat-btn">XÁC SUẤT<b id="st-r">0%</b></div>
             </div>
-
-            <button class="btn-exit" onclick="exit()">TERMINATE CONNECTION</button>
+            <button onclick="exit()" style="width:100%; margin-top:15px; padding:10px; background:#300; border:none; color:#f66; border-radius:10px; font-size:10px;">ĐÓNG & XOÁ CACHE</button>
         </div>
     </div>
 
-    <div id="pop-select" class="overlay">
-        <div class="popup" style="max-height:85vh;">
-            <b style="color:var(--accent)">CHỌN BÀN XÂM NHẬP (5RR99)</b>
-            <div id="t-list" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:20px; overflow-y:auto; max-height:400px;"></div>
-        </div>
-    </div>
-
-    <div id="pop-num" class="overlay">
-        <div class="popup" style="max-width:320px; background:#000;"><div class="num-grid" id="n-pad"></div></div>
-    </div>
+    <div id="pop-num" class="overlay"><div class="popup" style="width:280px;"><div class="n-grid" id="n-pad"></div></div></div>
 
 <script>
     let side = ''; let pS = null; let bS = null; let van = 1;
 
     function speak(t) { window.speechSynthesis.cancel(); let m = new SpeechSynthesisUtterance(t); m.lang = 'vi-VN'; window.speechSynthesis.speak(m); }
-    
-    function login() { 
-        document.getElementById('login-screen').style.display='none'; 
-        document.getElementById('main-app').style.display='flex'; 
-        speak("Chào ID 0 nờ bê trương lê k6. Đã xâm nhập thành công vào hệ thống năm rờ rờ chín mươi chín."); 
-    }
+    function login() { document.getElementById('login-screen').style.display='none'; document.getElementById('main-app').style.display='flex'; speak("Đã kết nối ID 0 n b trường l k 6 với máy chủ 5 r r 9 9."); }
 
     const pad = document.getElementById('n-pad');
     for(let i=0; i<=9; i++) {
         let b = document.createElement('button'); b.className='n-btn'; b.innerText=i;
         b.onclick = () => {
-            if(side=='P') { pS=i; document.getElementById('p-val').innerHTML=`<small>PLAYER</small>${i}`; }
-            else { bS=i; document.getElementById('b-val').innerHTML=`<small>BANKER</small>${i}`; }
+            if(side=='P') { pS=i; document.getElementById('pv').innerText=i; }
+            else { bS=i; document.getElementById('bv').innerText=i; }
             document.getElementById('pop-num').style.display='none';
-            if(pS!==null && bS!==null) runInfectionAI();
+            if(pS!==null && bS!==null) runAI();
         };
         pad.appendChild(b);
     }
 
-    const list = document.getElementById('t-list');
-    for(let i=1; i<=26; i++) {
-        let n = i<=10 ? `BÀN ${i}` : `BÀN C${i-10<10?'0'+(i-10):i-10}`;
-        let d = document.createElement('div'); d.style="background:#111; padding:15px 0; border:1px solid #333; border-radius:15px; font-size:11px; color:#fff; text-align:center; font-weight:bold;";
-        d.innerText = n;
-        d.onclick = () => { document.getElementById('pop-select').style.display='none'; document.getElementById('t-name').innerText="TARGET: 5RR99_" + n; document.getElementById('pop-tool').style.display='flex'; speak("Đang kết nối bàn " + n); };
-        list.appendChild(d);
-    }
-
-    function pickTable() { document.getElementById('pop-select').style.display='flex'; }
-    function setSide(s) { side=s; document.getElementById('pop-num').style.display='flex'; }
+    function openTool(n) { document.getElementById('t-info').innerText="5RR99 - "+n; document.getElementById('pop-tool').style.display='flex'; speak("Sẵn sàng quét bàn "+n); }
+    function setS(s) { side=s; document.getElementById('pop-num').style.display='flex'; }
     function exit() { document.getElementById('pop-tool').style.display='none'; pS=null; bS=null; van=1; }
 
-    function runInfectionAI() {
-        const resT = document.getElementById('res-text');
-        const resB = document.getElementById('res-box');
-        resB.classList.remove('active-res');
-        resT.innerText = "..";
-        document.getElementById('p-type').innerText = "CALCULATING...";
-
+    function runAI() {
+        const rt = document.getElementById('res');
+        rt.innerText = "..";
         setTimeout(() => {
-            resB.classList.add('active-res');
+            // CÔNG THỨC CHẴN LẺ + CỘNG TRỪ NHÂN CHIA CỔ ĐIỂN
+            // Quy tắc Cái chẵn + 1, Con trừ 1
+            let bCalc = ([0,2,4,6,8].includes(bS)) ? (bS + 1) : bS;
+            let pCalc = (van % 2 === 0) ? (pS - 1) : pS;
+            
+            // Phép tính tổ hợp
+            let logic = (bCalc * 3) - (pCalc * 2) + (van + 9);
+            let final = (Math.abs(logic) % 2 === 0) ? "B" : "P";
+            let rate = 90 + (Math.random() * 9);
 
-            // --- THUẬT TOÁN ĐẶC QUYỀN V12 ---
-            // Quy tắc Cái Chẵn: 0,2,4,6,8 => Cộng dồn ưu tiên (ID Logic)
-            let bC = bS;
-            if([0, 2, 4, 6, 8].includes(bS)) bC += 2; // Tăng hệ số xâm nhập cho ID cá nhân
-
-            let pC = pS;
-            if(van % 2 === 0) pC -= 1;
-
-            // Ma trận Big Data 10M
-            let logic = (bC * 13) + (pC * 17) + (van * 5);
-            let result = (Math.abs(logic) % 2 === 0) ? "B" : "P";
-
-            // So khớp vân tay cầu (10M Patterns)
-            let patterns = ["BỆT RỒNG 5RR99", "NHẢY CHU KỲ", "NGHIÊNG CÁI VVIP", "CẦU ĐỐI XỨNG 4-4", "XUNG NHỊP LẺ", "CẦU NGHIÊNG CON"];
-            let name = patterns[Math.floor(Math.random()*patterns.length)];
-            let rate = 94 + (Math.random()*5.5);
-
-            resT.innerText = result;
-            resT.style.color = result === 'P' ? "var(--player)" : "var(--accent)";
-            document.getElementById('p-type').innerText = name;
-            document.getElementById('p-rate').innerText = rate.toFixed(1) + "%";
-
-            speak("ID trương lê k6 chú ý. Lệnh " + (result==='P'?"Con":"Cái") + ". Xác suất thắng " + Math.floor(rate) + " phần trăm.");
-
+            rt.innerText = final;
+            rt.style.color = final === 'P' ? "var(--p)" : "var(--accent)";
+            document.getElementById('st-r').innerText = rate.toFixed(1) + "%";
+            
+            speak("ID trường l k 6 báo lệnh " + (final==='P'?"Con":"Cái") + ". Tỉ lệ " + Math.floor(rate) + " phần trăm.");
             pS=null; bS=null; van++;
-            document.getElementById('p-val').innerHTML=`<small>PLAYER</small>0`;
-            document.getElementById('b-val').innerHTML=`<small>BANKER</small>0`;
-            if(navigator.vibrate) navigator.vibrate([700]);
-        }, 3000);
+            document.getElementById('pv').innerText="0"; document.getElementById('bv').innerText="0";
+        }, 2000);
     }
 </script>
 </body>
-    </html>
-        
+</html>
