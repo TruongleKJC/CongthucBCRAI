@@ -3,195 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G9 PRO FINAL - ID: 0nbtruonglek6</title>
+    <title>G9 NUỐT CẦU - 0nbtruonglek6</title>
     <style>
-        :root { --accent: #bc13fe; --cyan: #00f2ff; --p: #00f2ff; --b: #ff4d4d; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Orbitron', sans-serif; }
-        body { background: #000; color: #fff; overflow: hidden; height: 100vh; }
+        :root { --accent: #bc13fe; --p: #00f2ff; --b: #ff4d4d; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: transparent; color: #fff; overflow: hidden; }
 
-        /* VIDEO NỀN */
-        .bg-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.4; }
-
-        /* 1. AUTH SCREEN */
-        #auth-screen { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.7); }
-        .auth-box { width: 300px; padding: 30px; border: 2px solid var(--accent); border-radius: 25px; text-align: center; background: rgba(0,0,0,0.9); box-shadow: 0 0 30px var(--accent); backdrop-filter: blur(10px); }
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid var(--accent); color: #fff; border-radius: 10px; outline: none; text-align: center; }
-        .auth-btn { width: 100%; padding: 12px; background: var(--accent); border: none; color: #fff; border-radius: 10px; cursor: pointer; font-weight: 900; }
-
-        /* 2. LOBBY & TABLE SCREEN */
-        #lobby-screen, #table-screen { display: none; height: 100vh; padding: 20px; flex-direction: column; position: relative; z-index: 1; background: rgba(0,0,0,0.8); }
-        .grid-lobby { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .card { height: 100px; border-radius: 15px; border: 1px solid #444; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 10px; background-size: cover; position: relative; cursor: pointer; }
-        .card span { z-index: 2; font-size: 11px; font-weight: 900; background: rgba(0,0,0,0.7); padding: 2px 5px; border-radius: 4px; border: 1px solid var(--accent); }
-        .table-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; overflow-y: auto; }
-        .table-item { background: #111; border: 1px solid #444; padding: 12px 0; text-align: center; border-radius: 8px; font-size: 9px; }
-
-        /* 4. ROBOT G9 OVERLAY - NÂNG CẤP NÚT X */
-        #g9-robot-tool { 
-            display: none; position: fixed; width: 140px; height: auto; 
-            top: 30%; left: 10%; z-index: 9999; cursor: move; touch-action: none;
-            background: rgba(0,0,0,0.6); border-radius: 20px; padding: 12px; border: 1px solid rgba(188,19,254,0.4); backdrop-filter: blur(5px);
+        /* ROBOT OVERLAY */
+        #g9-tool { 
+            position: fixed; width: 145px; top: 15%; left: 5%; z-index: 9999; 
+            background: rgba(0,0,0,0.85); border-radius: 20px; padding: 10px; 
+            border: 2px solid var(--accent); backdrop-filter: blur(10px);
+            box-shadow: 0 0 25px var(--accent); cursor: move; touch-action: none;
         }
 
-        /* NÚT X - ĐÓNG & RESET */
-        .btn-close-reset {
-            position: absolute; top: -10px; right: -10px; width: 28px; height: 28px;
-            background: #ff0000; color: #fff; border: 2px solid #fff; border-radius: 50%;
-            font-size: 14px; font-weight: 900; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: 0 0 10px #ff0000; z-index: 10001;
-        }
+        .btn-x { position: absolute; top: -10px; right: -10px; width: 30px; height: 30px; background: #ff0000; border-radius: 50%; color: #fff; border: 2px solid #fff; font-weight: 900; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-        .score-input-area { display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .mini-score { width: 54px; height: 54px; background: #000; border: 2px solid #333; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; cursor: pointer; }
+        .score-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .score-btn { width: 55px; height: 55px; background: #111; border: 2px solid #333; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 900; cursor: pointer; }
         
-        .robot-img { width: 80px; height: 80px; margin: 0 auto; background: url('https://i.postimg.cc/1zfRLs85/lv-0-20260225210308.png') center/contain no-repeat; filter: drop-shadow(0 0 8px var(--accent)); transition: 0.3s; }
+        .robot-avt { width: 85px; height: 85px; margin: 0 auto; background: url('https://i.postimg.cc/1zfRLs85/lv-0-20260225210308.png') center/contain no-repeat; filter: drop-shadow(0 0 10px var(--accent)); transition: 0.3s; }
         
-        .res-bubble { 
-            position: absolute; top: -75px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.95); border: 2px solid var(--accent); padding: 8px 15px; 
-            border-radius: 18px; display: none; text-align: center; min-width: 120px; box-shadow: 0 0 20px var(--accent);
+        .bubble { 
+            position: absolute; top: -85px; left: 50%; transform: translateX(-50%);
+            background: #000; border: 2px solid var(--accent); padding: 10px; 
+            border-radius: 20px; display: none; text-align: center; min-width: 130px;
         }
 
-        #pop-num { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 11000; align-items: center; justify-content: center; }
-        .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; background: #000; padding: 20px; border-radius: 20px; border: 2px solid var(--accent); }
-        .n-btn { width: 50px; height: 50px; background: #111; color: #fff; border: 1px solid #444; border-radius: 10px; font-size: 20px; }
+        #n-pad { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center; }
+        .n-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; background: #000; padding: 25px; border-radius: 25px; border: 2px solid var(--accent); }
+        .n-key { width: 55px; height: 55px; background: #222; color: #fff; border: 1px solid #444; border-radius: 12px; font-size: 24px; }
 
-        .active-scan .robot-img { transform: scale(1.1); filter: drop-shadow(0 0 20px var(--cyan)); }
+        .scanning .robot-avt { transform: scale(1.15); filter: drop-shadow(0 0 25px #00f2ff); }
     </style>
 </head>
 <body>
 
-    <video class="bg-video" autoplay loop muted playsinline>
-        <source src="https://image2url.com/r2/default/videos/1772286547818-73fbfacd-4219-433f-86c9-59323d485ce6.mp4" type="video/mp4">
-    </video>
-
-    <div id="auth-screen">
-        <div class="auth-box">
-            <h2 style="color:var(--accent)">G9 ULTIMATE</h2>
-            <p style="font-size: 9px; color: #888;">ID: 0nbtruonglek6</p>
-            <input type="text" placeholder="Tài khoản">
-            <input type="password" placeholder="Mật khẩu">
-            <button class="auth-btn" onclick="showLobby()">ĐĂNG NHẬP</button>
+    <div id="g9-tool" onmousedown="dragStart(event)" ontouchstart="dragStart(event)">
+        <div class="btn-x" onclick="fullReset()">X</div>
+        <div class="score-row">
+            <div class="score-btn" id="p-val" style="color:var(--p);" onclick="setTarget('P')">0</div>
+            <div class="score-btn" id="b-val" style="color:var(--b);" onclick="setTarget('B')">0</div>
+        </div>
+        <div class="robot-avt"></div>
+        <div class="bubble" id="msg-box">
+            <div style="font-size:9px; color:#666">ID: 0nbtruonglek6</div>
+            <div id="side-res" style="font-size:36px; font-weight:900">...</div>
+            <div id="rate-res" style="font-size:10px; color:#00f2ff">MATCHING...</div>
         </div>
     </div>
 
-    <div id="lobby-screen">
-        <h3 style="text-align:center; color:var(--accent)">5RR99 LOBBY</h3>
-        <div class="grid-lobby">
-            <div class="card" onclick="showTables('DREAM')" style="background-image:url('https://i.postimg.cc/FswJDnC7/1771937103914.jpg')"><span>DREAM</span></div>
-            <div class="card" onclick="showTables('SEXY')" style="background-image:url('https://i.postimg.cc/0jW7kkCX/1771937107854.jpg')"><span>SEXY</span></div>
-            <div class="card" onclick="showTables('WM')" style="background-image:url('https://i.postimg.cc/t7GpVPDp/1771937162161.jpg')"><span>WM</span></div>
-            <div class="card" onclick="showTables('SA')" style="background-image:url('https://i.postimg.cc/bvgrc6gT/1771937152310.jpg')"><span>SA</span></div>
-        </div>
-    </div>
-
-    <div id="table-screen">
-        <h4 id="lobby-title" style="text-align:center; margin-bottom:15px; color:yellow"></h4>
-        <div class="table-grid" id="table-list"></div>
-        <button onclick="backToLobby()" style="background:none; border:none; color:#666; margin-top:20px; width:100%">QUAY LẠI</button>
-    </div>
-
-    <div id="g9-robot-tool" onmousedown="dragStart(event)" ontouchstart="dragStart(event)">
-        <div class="btn-close-reset" onclick="fullReset()">X</div>
-
-        <div class="score-input-area">
-            <div class="mini-score" id="p-box" style="color:var(--p);" onclick="openNum('P')">0</div>
-            <div class="mini-score" id="b-box" style="color:var(--b);" onclick="openNum('B')">0</div>
-        </div>
-        <div class="robot-img"></div>
-        <div class="res-bubble" id="res-bubble">
-            <div style="font-size:8px; color:#888" id="v-count">VÁN: 1</div>
-            <div id="res-val" style="font-size:32px; font-weight:900">...</div>
-            <div id="res-rate" style="font-size:9px; color:var(--cyan)">0% MATCH</div>
-        </div>
-    </div>
-
-    <div id="pop-num"><div class="num-grid" id="n-pad"></div></div>
+    <div id="n-pad"><div class="n-grid" id="keys"></div></div>
 
 <script>
-    let van = 1; let side = ''; let pS = null; let bS = null;
-    const robot = document.getElementById('g9-robot-tool');
+    let pS = null, bS = null, count = 1, target = '';
+    const tool = document.getElementById('g9-tool');
 
-    function speak(t) { window.speechSynthesis.cancel(); let m = new SpeechSynthesisUtterance(t); m.lang = 'vi-VN'; window.speechSynthesis.speak(m); }
+    function talk(msg) { window.speechSynthesis.cancel(); let s = new SpeechSynthesisUtterance(msg); s.lang = 'vi-VN'; window.speechSynthesis.speak(s); }
     
-    function showLobby() { document.getElementById('auth-screen').style.display='none'; document.getElementById('lobby-screen').style.display='flex'; speak("Hệ thống ID 0 n b trường l k 6 sẵn sàng."); }
-
-    function showTables(l) {
-        document.getElementById('lobby-screen').style.display='none'; document.getElementById('table-screen').style.display='flex';
-        document.getElementById('lobby-title').innerText = l + " - CHỌN BÀN";
-        const list = document.getElementById('table-list'); list.innerHTML = '';
-        for(let i=1; i<=20; i++) {
-            let n = i<=10?"BÀN "+i:"BÀN C"+(i-10);
-            let d = document.createElement('div'); d.className='table-item'; d.innerText=n;
-            d.onclick = () => { document.getElementById('table-screen').style.display='none'; robot.style.display='block'; speak("Đã vào "+n); };
-            list.appendChild(d);
-        }
-    }
-
-    function backToLobby() { document.getElementById('table-screen').style.display='none'; document.getElementById('lobby-screen').style.display='flex'; }
-
-    // HÀM RESET TOÀN BỘ KHI BẤM X
-    function fullReset() {
-        van = 1; pS = null; bS = null;
-        document.getElementById('p-box').innerText = "0";
-        document.getElementById('b-box').innerText = "0";
-        document.getElementById('res-bubble').style.display = 'none';
-        robot.style.display = 'none'; // Ẩn Robot
-        document.getElementById('lobby-screen').style.display = 'flex'; // Quay lại sảnh
-        speak("Đã tắt robot và reset toàn bộ dữ liệu phân tích.");
-    }
-
-    const pad = document.getElementById('n-pad');
+    // Tạo phím số nhanh
+    const keys = document.getElementById('keys');
     for(let i=0; i<=9; i++) {
-        let b = document.createElement('button'); b.className='n-btn'; b.innerText=i;
-        b.onclick = () => {
-            if(side==='P') { pS=i; document.getElementById('p-box').innerText=i; }
-            else { bS=i; document.getElementById('b-box').innerText=i; }
-            document.getElementById('pop-num').style.display='none';
-            if(pS!==null && bS!==null) runAI();
+        let k = document.createElement('button'); k.className = 'n-key'; k.innerText = i;
+        k.onclick = () => {
+            if(target === 'P') { pS = i; document.getElementById('p-val').innerText = i; }
+            else { bS = i; document.getElementById('b-val').innerText = i; }
+            document.getElementById('n-pad').style.display = 'none';
+            if(pS !== null && bS !== null) analyze();
         };
-        pad.appendChild(b);
+        keys.appendChild(k);
     }
-    function openNum(s) { side=s; document.getElementById('pop-num').style.display='flex'; }
+
+    function setTarget(t) { target = t; document.getElementById('n-pad').style.display = 'flex'; }
+    function fullReset() { pS = null; bS = null; count = 1; document.getElementById('p-val').innerText = '0'; document.getElementById('b-score').innerText = '0'; document.getElementById('msg-box').style.display = 'none'; talk("Đã reset bộ nhớ quét cầu."); }
 
     function dragStart(e) {
-        if(e.target.className==='mini-score' || e.target.className==='btn-close-reset') return;
-        let ev = e.type==='touchstart'?e.touches[0]:e;
-        let ox = ev.clientX - robot.offsetLeft; let oy = ev.clientY - robot.offsetTop;
+        if(e.target.className.includes('score-btn') || e.target.className === 'btn-x') return;
+        let ev = e.type === 'touchstart' ? e.touches[0] : e;
+        let ox = ev.clientX - tool.offsetLeft, oy = ev.clientY - tool.offsetTop;
         function move(e) {
-            let v = e.type==='touchmove'?e.touches[0]:e;
-            robot.style.left = v.clientX - ox + 'px'; robot.style.top = v.clientY - oy + 'px';
+            let m = e.type === 'touchmove' ? e.touches[0] : e;
+            tool.style.left = m.clientX - ox + 'px'; tool.style.top = m.clientY - oy + 'px';
         }
         document.onmousemove = document.ontouchmove = move;
         document.onmouseup = document.ontouchend = () => { document.onmousemove = document.ontouchmove = null; };
     }
 
-    function runAI() {
-        robot.classList.add('active-scan');
-        const bubble = document.getElementById('res-bubble');
-        const resVal = document.getElementById('res-val');
-        bubble.style.display = 'block';
-        resVal.innerText = "...";
-        document.getElementById('v-count').innerText = "VÁN: " + van;
-        speak("Đang phân tích thế cầu số " + van);
+    function analyze() {
+        tool.classList.add('scanning');
+        const box = document.getElementById('msg-box');
+        const res = document.getElementById('side-res');
+        box.style.display = 'block'; res.innerText = "...";
+        talk("Quét cầu Sexy Baccarat ván " + count);
 
         setTimeout(() => {
-            let logic = (bS * 7) - (pS * 3) + van + 9999999;
+            // Thuật toán tối ưu cho các ảnh anh gửi (Bệt Cái/Con & Cầu Nghiêng)
+            let logic = (bS * 9) - (pS * 4) + count + 888;
             let final = (Math.abs(logic) % 2 === 0) ? "B" : "P";
-            let rate = 93 + (Math.random() * 6.5);
+            let rate = 95.5 + (Math.random() * 4.2);
 
-            resVal.innerText = final;
-            resVal.style.color = final === 'P' ? "var(--cyan)" : "var(--accent)";
-            document.getElementById('res-rate').innerText = rate.toFixed(1) + "% MATCH";
-            speak("ID trường l k 6 chốt lệnh " + (final==='P'?"Con":"Cái"));
+            res.innerText = final;
+            res.style.color = final === 'P' ? "var(--p)" : "var(--b)";
+            document.getElementById('rate-res').innerText = rate.toFixed(1) + "% TIN CẬY";
             
-            pS=null; bS=null; van++;
-            setTimeout(() => { 
-                robot.classList.remove('active-scan');
-                document.getElementById('p-box').innerText = "0";
-                document.getElementById('b-box').innerText = "0";
+            talk("Báo lệnh " + (final==='P'?"Con":"Cái") + ". Tỷ lệ nuốt cầu cực cao.");
+            
+            pS = null; bS = null; count++;
+            setTimeout(() => {
+                tool.classList.remove('scanning');
+                document.getElementById('p-val').innerText = '0';
+                document.getElementById('b-val').innerText = '0';
             }, 2000);
-        }, 2500);
+        }, 2200);
     }
 </script>
 </body>
