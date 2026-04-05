@@ -7,7 +7,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body { background: transparent; font-family: sans-serif; margin: 0; display: flex; justify-content: center; }
-        .menu-card { width: 260px; background: rgba(15, 15, 20, 0.95); border: 2px solid #ff0000; border-radius: 12px; color: white; overflow: hidden; box-shadow: 0 0 20px #ff0000; }
+        .menu-card { width: 260px; background: rgba(15, 15, 20, 0.98); border: 2px solid #ff0000; border-radius: 12px; color: white; overflow: hidden; box-shadow: 0 0 20px #ff0000; }
         .section-title { font-size: 10px; color: #ff4444; margin: 10px 12px; text-transform: uppercase; font-weight: bold; border-left: 3px solid #ff0000; padding-left: 8px; }
         .feature-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 8px 12px; border-radius: 8px; margin: 4px 10px; font-size: 12px; }
         .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
@@ -16,28 +16,30 @@
         .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
         input:checked + .slider { background-color: #ff0000; }
         input:checked + .slider:before { transform: translateX(16px); }
-        .btn-launch { background: #1e293b; border: 1px solid #334155; padding: 6px; border-radius: 6px; font-size: 10px; width: 100%; font-weight: bold; }
+        .btn-game { background: #1e293b; border: 1px solid #334155; padding: 10px; border-radius: 8px; font-size: 10px; font-weight: bold; transition: 0.2s; width: 100%; }
+        .btn-game:active { background: #ff0000; transform: scale(0.95); }
     </style>
 </head>
 <body>
     <div class="menu-card">
-        <div class="bg-red-600 p-3 flex justify-between items-center">
+        <div class="bg-red-600 p-3 flex justify-between items-center shadow-md">
             <span class="font-bold text-xs italic">KHÁNH MOD GITHUB</span>
-            <span class="text-[9px] bg-black px-2 py-0.5 rounded-full border border-white/20">V2.0 ONLINE</span>
+            <span class="text-[9px] bg-black px-2 py-0.5 rounded-full border border-white/20 font-bold">V3.0 ONLINE</span>
         </div>
+        
         <div class="p-1">
-            <div class="section-title">Menu Aim</div>
-            <div class="feature-item"><span>Aimlock/Head</span><label class="switch"><input type="checkbox" onchange="toggle('Aim')"><span class="slider"></span></label></div>
-            <div class="feature-item"><span>Aim 360</span><label class="switch"><input type="checkbox" onchange="toggle('360')"><span class="slider"></span></label></div>
+            <div class="section-title">Hỗ trợ Aim</div>
+            <div class="feature-item"><span>Aimlock/Headshot</span><label class="switch"><input type="checkbox" onchange="toggle('Aim')"><span class="slider"></span></label></div>
+            <div class="feature-item"><span>Aim 360° Smooth</span><label class="switch"><input type="checkbox" onchange="toggle('360')"><span class="slider"></span></label></div>
             
-            <div class="section-title">Menu ESP</div>
+            <div class="section-title">Hỗ trợ ESP</div>
             <div class="feature-item"><span>Antenna Head</span><label class="switch"><input type="checkbox" onchange="toggle('Ant')"><span class="slider"></span></label></div>
-            <div class="feature-item"><span>ESP Wallhack</span><label class="switch"><input type="checkbox" onchange="toggle('Wall')"><span class="slider"></span></label></div>
+            <div class="feature-item"><span>ESP Wallhack/HP</span><label class="switch"><input type="checkbox" onchange="toggle('Wall')"><span class="slider"></span></label></div>
 
-            <div class="section-title">Launcher</div>
-            <div class="grid grid-cols-2 gap-2 px-2 mb-3">
-                <button onclick="launch('com.dts.freefireth')" class="btn-launch">FF TH</button>
-                <button onclick="launch('com.dts.freefiremax')" class="btn-launch text-yellow-500">FF MAX</button>
+            <div class="section-title text-blue-400 border-blue-500">Khởi động Game nhanh</div>
+            <div class="grid grid-cols-2 gap-2 px-2 mt-2 mb-4">
+                <button onclick="launch('com.dts.freefireth')" class="btn-game">FREE FIRE (TH)</button>
+                <button onclick="launch('com.dts.freefiremax')" class="btn-game text-yellow-500">FF MAX</button>
             </div>
         </div>
     </div>
