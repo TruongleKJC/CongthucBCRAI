@@ -1,158 +1,50 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FF Git Menu All-In-One</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    
     <style>
-        /* Tùy chỉnh hiệu ứng menu */
-        body { 
-            background: rgba(0, 0, 0, 0.2); /* Nền trong suốt để thấy game phía sau */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .menu-container {
-            background: rgba(13, 17, 23, 0.95);
-            border: 2px solid #2563eb;
-            box-shadow: 0 0 20px rgba(37, 99, 235, 0.6);
-            width: 280px;
-            border-radius: 15px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .status-dot {
-            height: 8px;
-            width: 8px;
-            background-color: #22c55e;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 5px #22c55e;
-        }
-
-        .custom-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #2563eb;
-            border-radius: 10px;
-        }
+        body { background: transparent; font-family: sans-serif; margin: 0; display: flex; justify-content: center; }
+        .menu-card { width: 260px; background: rgba(15, 15, 20, 0.95); border: 2px solid #ff0000; border-radius: 12px; color: white; overflow: hidden; box-shadow: 0 0 20px #ff0000; }
+        .section-title { font-size: 10px; color: #ff4444; margin: 10px 12px; text-transform: uppercase; font-weight: bold; border-left: 3px solid #ff0000; padding-left: 8px; }
+        .feature-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 8px 12px; border-radius: 8px; margin: 4px 10px; font-size: 12px; }
+        .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334; transition: .3s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: #ff0000; }
+        input:checked + .slider:before { transform: translateX(16px); }
+        .btn-launch { background: #1e293b; border: 1px solid #334155; padding: 6px; border-radius: 6px; font-size: 10px; width: 100%; font-weight: bold; }
     </style>
 </head>
 <body>
-
-    <div class="menu-container text-white p-4">
-        <div class="flex justify-between items-center mb-4 border-b border-blue-900 pb-2">
-            <div class="flex items-center gap-2">
-                <i data-lucide="shield-check" class="text-blue-500 w-5 h-5"></i>
-                <span class="font-bold tracking-wider text-sm">KHÁNH MOD MENU</span>
-            </div>
-            <div class="flex items-center gap-1">
-                <span class="status-dot"></span>
-                <span class="text-[10px] text-gray-400">ONLINE</span>
-            </div>
+    <div class="menu-card">
+        <div class="bg-red-600 p-3 flex justify-between items-center">
+            <span class="font-bold text-xs italic">KHÁNH MOD GITHUB</span>
+            <span class="text-[9px] bg-black px-2 py-0.5 rounded-full border border-white/20">V2.0 ONLINE</span>
         </div>
+        <div class="p-1">
+            <div class="section-title">Menu Aim</div>
+            <div class="feature-item"><span>Aimlock/Head</span><label class="switch"><input type="checkbox" onchange="toggle('Aim')"><span class="slider"></span></label></div>
+            <div class="feature-item"><span>Aim 360</span><label class="switch"><input type="checkbox" onchange="toggle('360')"><span class="slider"></span></label></div>
+            
+            <div class="section-title">Menu ESP</div>
+            <div class="feature-item"><span>Antenna Head</span><label class="switch"><input type="checkbox" onchange="toggle('Ant')"><span class="slider"></span></label></div>
+            <div class="feature-item"><span>ESP Wallhack</span><label class="switch"><input type="checkbox" onchange="toggle('Wall')"><span class="slider"></span></label></div>
 
-        <div class="mb-4">
-            <label class="text-[10px] text-blue-400 font-semibold uppercase">GitHub Repository</label>
-            <div class="relative mt-1">
-                <input type="text" id="repoUrl" 
-                    placeholder="https://github.com/user/mod-ff"
-                    class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs focus:ring-1 focus:ring-blue-500 outline-none pr-8">
-                <i data-lucide="github" class="absolute right-2 top-2 w-4 h-4 text-slate-500"></i>
+            <div class="section-title">Launcher</div>
+            <div class="grid grid-cols-2 gap-2 px-2 mb-3">
+                <button onclick="launch('com.dts.freefireth')" class="btn-launch">FF TH</button>
+                <button onclick="launch('com.dts.freefiremax')" class="btn-launch text-yellow-500">FF MAX</button>
             </div>
-        </div>
-
-        <div class="space-y-2">
-            <button onclick="executeGitAction()" 
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all transform active:scale-95">
-                <i data-lucide="play-circle" class="w-4 h-4"></i> CHẠY SCRIPT TỪ GIT
-            </button>
-
-            <div class="grid grid-cols-2 gap-2">
-                <button onclick="toggleFeature('Aimlock')" class="bg-slate-800 hover:bg-slate-700 p-2 rounded text-[11px] border border-slate-700 flex flex-col items-center gap-1">
-                    <i data-lucide="crosshair" class="w-4 h-4 text-red-500"></i>
-                    AIMLOCK
-                </button>
-                <button onclick="toggleFeature('Antena')" class="bg-slate-800 hover:bg-slate-700 p-2 rounded text-[11px] border border-slate-700 flex flex-col items-center gap-1">
-                    <i data-lucide="radio" class="w-4 h-4 text-yellow-500"></i>
-                    ANTENA
-                </button>
-            </div>
-        </div>
-
-        <div class="mt-4">
-            <div class="text-[9px] text-gray-500 mb-1 flex justify-between">
-                <span>CONSOLE LOG</span>
-                <span id="timestamp"></span>
-            </div>
-            <div id="console" class="bg-black rounded-lg p-2 h-24 text-[10px] font-mono text-green-500 overflow-y-auto custom-scroll border border-slate-800">
-                > System initialized...<br>
-                > Waiting for GitHub URL...
-            </div>
-        </div>
-
-        <div class="mt-4 text-center">
-            <p class="text-[9px] text-gray-600">© 2026 Developed for Research Only</p>
         </div>
     </div>
-
     <script>
-        // Khởi tạo icons Lucide
         lucide.createIcons();
-
-        // Cập nhật thời gian thực
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('timestamp').innerText = now.toLocaleTimeString();
-        }
-        setInterval(updateTime, 1000);
-
-        function printLog(message) {
-            const consoleDiv = document.getElementById('console');
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            consoleDiv.innerHTML += `<br><span class="text-blue-400">[${time}]</span> ${message}`;
-            consoleDiv.scrollTop = consoleDiv.scrollHeight;
-        }
-
-        // Hàm xử lý chính cho Git
-        function executeGitAction() {
-            const url = document.getElementById('repoUrl').value;
-            
-            if (!url) {
-                printLog("<span class='text-red-500'>Lỗi: URL trống!</span>");
-                return;
-            }
-
-            printLog("Đang kết nối tới GitHub...");
-            
-            // Kiểm tra xem có đang chạy trong môi trường Android (AIDE/WebView Bridge) không
-            if (window.Android && typeof window.Android.runGitScript === "function") {
-                printLog("Đang gọi Bridge hệ thống...");
-                window.Android.runGitScript(url);
-                printLog("Lệnh đã được gửi đến Android OS.");
-            } else {
-                // Giả lập nếu chạy trên trình duyệt thường
-                printLog("Môi trường: Browser (Demo Mode)");
-                printLog(`Giả lập Clone: ${url}`);
-                setTimeout(() => {
-                    printLog("<span class='text-yellow-400'>Cảnh báo: Cần chạy trong App Android để thực thi lệnh Shell.</span>");
-                }, 1000);
-            }
-        }
-
-        function toggleFeature(name) {
-            printLog(`Kích hoạt tính năng: <span class='text-white'>${name}</span>`);
-            // Bạn có thể thêm window.Android.toggle(name) ở đây nếu có code Java tương ứng
-        }
+        function toggle(f) { if(window.Android) window.Android.toggleFeature(f); }
+        function launch(p) { if(window.Android) window.Android.launchGame(p); }
     </script>
 </body>
 </html>
