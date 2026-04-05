@@ -1,52 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KHÁNH MOD MENU</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { background: transparent; font-family: sans-serif; margin: 0; display: flex; justify-content: center; }
-        .menu-card { width: 260px; background: rgba(15, 15, 20, 0.98); border: 2px solid #ff0000; border-radius: 12px; color: white; overflow: hidden; box-shadow: 0 0 20px #ff0000; }
-        .section-title { font-size: 10px; color: #ff4444; margin: 10px 12px; text-transform: uppercase; font-weight: bold; border-left: 3px solid #ff0000; padding-left: 8px; }
-        .feature-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 8px 12px; border-radius: 8px; margin: 4px 10px; font-size: 12px; }
-        .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
+        body { background: #0f172a; color: white; font-family: sans-serif; display: flex; justify-content: center; padding: 20px; }
+        .menu-card { width: 100%; max-width: 350px; background: #1e293b; border: 2px solid #ef4444; border-radius: 15px; overflow: hidden; }
+        .feature-item { display: flex; justify-content: space-between; align-items: center; background: #334155; padding: 12px; margin: 8px; border-radius: 10px; }
+        .switch { position: relative; width: 40px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334; transition: .3s; border-radius: 20px; }
-        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: #ff0000; }
-        input:checked + .slider:before { transform: translateX(16px); }
-        .btn-game { background: #1e293b; border: 1px solid #334155; padding: 10px; border-radius: 8px; font-size: 10px; font-weight: bold; transition: 0.2s; width: 100%; }
-        .btn-game:active { background: #ff0000; transform: scale(0.95); }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #475569; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background: #ef4444; }
+        input:checked + .slider:before { transform: translateX(20px); }
+        .btn-game { background: #ef4444; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; margin-top: 10px; transition: 0.3s; }
+        .btn-game:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
     <div class="menu-card">
-        <div class="bg-red-600 p-3 flex justify-between items-center shadow-md">
-            <span class="font-bold text-xs italic">KHÁNH MOD GITHUB</span>
-            <span class="text-[9px] bg-black px-2 py-0.5 rounded-full border border-white/20 font-bold">V3.0 ONLINE</span>
-        </div>
+        <div class="bg-red-600 p-4 text-center font-bold italic">KHÁNH MOD MENU v3.0</div>
         
-        <div class="p-1">
-            <div class="section-title">Hỗ trợ Aim</div>
-            <div class="feature-item"><span>Aimlock/Headshot</span><label class="switch"><input type="checkbox" onchange="toggle('Aim')"><span class="slider"></span></label></div>
-            <div class="feature-item"><span>Aim 360° Smooth</span><label class="switch"><input type="checkbox" onchange="toggle('360')"><span class="slider"></span></label></div>
-            
-            <div class="section-title">Hỗ trợ ESP</div>
-            <div class="feature-item"><span>Antenna Head</span><label class="switch"><input type="checkbox" onchange="toggle('Ant')"><span class="slider"></span></label></div>
-            <div class="feature-item"><span>ESP Wallhack/HP</span><label class="switch"><input type="checkbox" onchange="toggle('Wall')"><span class="slider"></span></label></div>
+        <div class="p-2">
+            <p class="text-xs text-gray-400 ml-2 mt-2">AIMBOT SETTINGS</p>
+            <div class="feature-item"><span>Aimlock / Headshot</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+            <div class="feature-item"><span>Aim 360° Smooth</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
 
-            <div class="section-title text-blue-400 border-blue-500">Khởi động Game nhanh</div>
-            <div class="grid grid-cols-2 gap-2 px-2 mt-2 mb-4">
-                <button onclick="launch('com.dts.freefireth')" class="btn-game">FREE FIRE (TH)</button>
-                <button onclick="launch('com.dts.freefiremax')" class="btn-game text-yellow-500">FF MAX</button>
+            <p class="text-xs text-gray-400 ml-2 mt-4">ESP SETTINGS</p>
+            <div class="feature-item"><span>Antenna Head</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+            <div class="feature-item"><span>ESP Wallhack</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+
+            <p class="text-xs text-gray-400 ml-2 mt-4">LAUNCHER</p>
+            <div class="px-2 pb-4">
+                <button onclick="alert('Đang mở Free Fire...')" class="btn-game">OPEN FREE FIRE</button>
+                <button onclick="alert('Đang mở FF MAX...')" class="btn-game bg-yellow-600">OPEN FF MAX</button>
             </div>
         </div>
     </div>
-    <script>
-        lucide.createIcons();
-        function toggle(f) { if(window.Android) window.Android.toggleFeature(f); }
-        function launch(p) { if(window.Android) window.Android.launchGame(p); }
-    </script>
 </body>
 </html>
