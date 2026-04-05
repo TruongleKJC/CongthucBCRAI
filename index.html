@@ -3,119 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G9 NUỐT CẦU - 0nbtruonglek6</title>
+    <title>FF Git Menu All-In-One</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
-        :root { --accent: #bc13fe; --p: #00f2ff; --b: #ff4d4d; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: transparent; color: #fff; overflow: hidden; }
-
-        /* ROBOT OVERLAY */
-        #g9-tool { 
-            position: fixed; width: 145px; top: 15%; left: 5%; z-index: 9999; 
-            background: rgba(0,0,0,0.85); border-radius: 20px; padding: 10px; 
-            border: 2px solid var(--accent); backdrop-filter: blur(10px);
-            box-shadow: 0 0 25px var(--accent); cursor: move; touch-action: none;
+        /* Tùy chỉnh hiệu ứng menu */
+        body { 
+            background: rgba(0, 0, 0, 0.2); /* Nền trong suốt để thấy game phía sau */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
 
-        .btn-x { position: absolute; top: -10px; right: -10px; width: 30px; height: 30px; background: #ff0000; border-radius: 50%; color: #fff; border: 2px solid #fff; font-weight: 900; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-
-        .score-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .score-btn { width: 55px; height: 55px; background: #111; border: 2px solid #333; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 900; cursor: pointer; }
-        
-        .robot-avt { width: 85px; height: 85px; margin: 0 auto; background: url('https://i.postimg.cc/1zfRLs85/lv-0-20260225210308.png') center/contain no-repeat; filter: drop-shadow(0 0 10px var(--accent)); transition: 0.3s; }
-        
-        .bubble { 
-            position: absolute; top: -85px; left: 50%; transform: translateX(-50%);
-            background: #000; border: 2px solid var(--accent); padding: 10px; 
-            border-radius: 20px; display: none; text-align: center; min-width: 130px;
+        .menu-container {
+            background: rgba(13, 17, 23, 0.95);
+            border: 2px solid #2563eb;
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.6);
+            width: 280px;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
-        #n-pad { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center; }
-        .n-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; background: #000; padding: 25px; border-radius: 25px; border: 2px solid var(--accent); }
-        .n-key { width: 55px; height: 55px; background: #222; color: #fff; border: 1px solid #444; border-radius: 12px; font-size: 24px; }
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 5px #22c55e;
+        }
 
-        .scanning .robot-avt { transform: scale(1.15); filter: drop-shadow(0 0 25px #00f2ff); }
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #2563eb;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="g9-tool" onmousedown="dragStart(event)" ontouchstart="dragStart(event)">
-        <div class="btn-x" onclick="fullReset()">X</div>
-        <div class="score-row">
-            <div class="score-btn" id="p-val" style="color:var(--p);" onclick="setTarget('P')">0</div>
-            <div class="score-btn" id="b-val" style="color:var(--b);" onclick="setTarget('B')">0</div>
+    <div class="menu-container text-white p-4">
+        <div class="flex justify-between items-center mb-4 border-b border-blue-900 pb-2">
+            <div class="flex items-center gap-2">
+                <i data-lucide="shield-check" class="text-blue-500 w-5 h-5"></i>
+                <span class="font-bold tracking-wider text-sm">KHÁNH MOD MENU</span>
+            </div>
+            <div class="flex items-center gap-1">
+                <span class="status-dot"></span>
+                <span class="text-[10px] text-gray-400">ONLINE</span>
+            </div>
         </div>
-        <div class="robot-avt"></div>
-        <div class="bubble" id="msg-box">
-            <div style="font-size:9px; color:#666">ID: 0nbtruonglek6</div>
-            <div id="side-res" style="font-size:36px; font-weight:900">...</div>
-            <div id="rate-res" style="font-size:10px; color:#00f2ff">MATCHING...</div>
+
+        <div class="mb-4">
+            <label class="text-[10px] text-blue-400 font-semibold uppercase">GitHub Repository</label>
+            <div class="relative mt-1">
+                <input type="text" id="repoUrl" 
+                    placeholder="https://github.com/user/mod-ff"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs focus:ring-1 focus:ring-blue-500 outline-none pr-8">
+                <i data-lucide="github" class="absolute right-2 top-2 w-4 h-4 text-slate-500"></i>
+            </div>
+        </div>
+
+        <div class="space-y-2">
+            <button onclick="executeGitAction()" 
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all transform active:scale-95">
+                <i data-lucide="play-circle" class="w-4 h-4"></i> CHẠY SCRIPT TỪ GIT
+            </button>
+
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="toggleFeature('Aimlock')" class="bg-slate-800 hover:bg-slate-700 p-2 rounded text-[11px] border border-slate-700 flex flex-col items-center gap-1">
+                    <i data-lucide="crosshair" class="w-4 h-4 text-red-500"></i>
+                    AIMLOCK
+                </button>
+                <button onclick="toggleFeature('Antena')" class="bg-slate-800 hover:bg-slate-700 p-2 rounded text-[11px] border border-slate-700 flex flex-col items-center gap-1">
+                    <i data-lucide="radio" class="w-4 h-4 text-yellow-500"></i>
+                    ANTENA
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <div class="text-[9px] text-gray-500 mb-1 flex justify-between">
+                <span>CONSOLE LOG</span>
+                <span id="timestamp"></span>
+            </div>
+            <div id="console" class="bg-black rounded-lg p-2 h-24 text-[10px] font-mono text-green-500 overflow-y-auto custom-scroll border border-slate-800">
+                > System initialized...<br>
+                > Waiting for GitHub URL...
+            </div>
+        </div>
+
+        <div class="mt-4 text-center">
+            <p class="text-[9px] text-gray-600">© 2026 Developed for Research Only</p>
         </div>
     </div>
 
-    <div id="n-pad"><div class="n-grid" id="keys"></div></div>
+    <script>
+        // Khởi tạo icons Lucide
+        lucide.createIcons();
 
-<script>
-    let pS = null, bS = null, count = 1, target = '';
-    const tool = document.getElementById('g9-tool');
-
-    function talk(msg) { window.speechSynthesis.cancel(); let s = new SpeechSynthesisUtterance(msg); s.lang = 'vi-VN'; window.speechSynthesis.speak(s); }
-    
-    // Tạo phím số nhanh
-    const keys = document.getElementById('keys');
-    for(let i=0; i<=9; i++) {
-        let k = document.createElement('button'); k.className = 'n-key'; k.innerText = i;
-        k.onclick = () => {
-            if(target === 'P') { pS = i; document.getElementById('p-val').innerText = i; }
-            else { bS = i; document.getElementById('b-val').innerText = i; }
-            document.getElementById('n-pad').style.display = 'none';
-            if(pS !== null && bS !== null) analyze();
-        };
-        keys.appendChild(k);
-    }
-
-    function setTarget(t) { target = t; document.getElementById('n-pad').style.display = 'flex'; }
-    function fullReset() { pS = null; bS = null; count = 1; document.getElementById('p-val').innerText = '0'; document.getElementById('b-score').innerText = '0'; document.getElementById('msg-box').style.display = 'none'; talk("Đã reset bộ nhớ quét cầu."); }
-
-    function dragStart(e) {
-        if(e.target.className.includes('score-btn') || e.target.className === 'btn-x') return;
-        let ev = e.type === 'touchstart' ? e.touches[0] : e;
-        let ox = ev.clientX - tool.offsetLeft, oy = ev.clientY - tool.offsetTop;
-        function move(e) {
-            let m = e.type === 'touchmove' ? e.touches[0] : e;
-            tool.style.left = m.clientX - ox + 'px'; tool.style.top = m.clientY - oy + 'px';
+        // Cập nhật thời gian thực
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('timestamp').innerText = now.toLocaleTimeString();
         }
-        document.onmousemove = document.ontouchmove = move;
-        document.onmouseup = document.ontouchend = () => { document.onmousemove = document.ontouchmove = null; };
-    }
+        setInterval(updateTime, 1000);
 
-    function analyze() {
-        tool.classList.add('scanning');
-        const box = document.getElementById('msg-box');
-        const res = document.getElementById('side-res');
-        box.style.display = 'block'; res.innerText = "...";
-        talk("Quét cầu Sexy Baccarat ván " + count);
+        function printLog(message) {
+            const consoleDiv = document.getElementById('console');
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            consoleDiv.innerHTML += `<br><span class="text-blue-400">[${time}]</span> ${message}`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
 
-        setTimeout(() => {
-            // Thuật toán tối ưu cho các ảnh anh gửi (Bệt Cái/Con & Cầu Nghiêng)
-            let logic = (bS * 9) - (pS * 4) + count + 888;
-            let final = (Math.abs(logic) % 2 === 0) ? "B" : "P";
-            let rate = 95.5 + (Math.random() * 4.2);
-
-            res.innerText = final;
-            res.style.color = final === 'P' ? "var(--p)" : "var(--b)";
-            document.getElementById('rate-res').innerText = rate.toFixed(1) + "% TIN CẬY";
+        // Hàm xử lý chính cho Git
+        function executeGitAction() {
+            const url = document.getElementById('repoUrl').value;
             
-            talk("Báo lệnh " + (final==='P'?"Con":"Cái") + ". Tỷ lệ nuốt cầu cực cao.");
+            if (!url) {
+                printLog("<span class='text-red-500'>Lỗi: URL trống!</span>");
+                return;
+            }
+
+            printLog("Đang kết nối tới GitHub...");
             
-            pS = null; bS = null; count++;
-            setTimeout(() => {
-                tool.classList.remove('scanning');
-                document.getElementById('p-val').innerText = '0';
-                document.getElementById('b-val').innerText = '0';
-            }, 2000);
-        }, 2200);
-    }
-</script>
+            // Kiểm tra xem có đang chạy trong môi trường Android (AIDE/WebView Bridge) không
+            if (window.Android && typeof window.Android.runGitScript === "function") {
+                printLog("Đang gọi Bridge hệ thống...");
+                window.Android.runGitScript(url);
+                printLog("Lệnh đã được gửi đến Android OS.");
+            } else {
+                // Giả lập nếu chạy trên trình duyệt thường
+                printLog("Môi trường: Browser (Demo Mode)");
+                printLog(`Giả lập Clone: ${url}`);
+                setTimeout(() => {
+                    printLog("<span class='text-yellow-400'>Cảnh báo: Cần chạy trong App Android để thực thi lệnh Shell.</span>");
+                }, 1000);
+            }
+        }
+
+        function toggleFeature(name) {
+            printLog(`Kích hoạt tính năng: <span class='text-white'>${name}</span>`);
+            // Bạn có thể thêm window.Android.toggle(name) ở đây nếu có code Java tương ứng
+        }
+    </script>
 </body>
 </html>
